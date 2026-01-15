@@ -1,0 +1,211 @@
+! ——— IDN Homograph & Favicon Security List (uBlock) ———
+!
+! Conceptual successor inspired by:
+! - "IDN Homograph Attack Protection"
+! - "Anti-Favicon List"
+!   by DandelionSprout
+!
+! Focus:
+! - Mitigate phishing and impersonation via IDN / Punycode homograph attacks
+! - Prevent persistent favicon-based tracking and identification techniques
+!
+! Scope & philosophy:
+! - Security-focused (not a generic privacy or tracker-blocking list)
+! - Conservative by design to minimize false positives and site breakage
+! - Exceptions included for verified brands, governments, and institutions
+!
+! Maintenance model:
+! - Intended as a stable, long-term list
+! - Updated only when new, well-established attack vectors emerge
+!
+! Author: TantalusDrive
+! Repository: https://github.com/TantalusDrive/Sec_filters
+
+
+! ——— IDN / Punycode homograph attacks — global ———
+/^(https?://)?[a-z0-9.]{0,25}?xn--.*\.[a-wyz][a-z]{1,17}(/|$)/$popup,frame,document
+/^(https?://)?[a-z0-9.]{0,25}?xn--.*\.x[a-mo-z]{1,6}(/|$)/$popup,frame,document
+
+! Exceptions: verified global domains (brands, institutions, govs)
+@@||xn--fsq.com^
+@@||xn--wgv71a.com^
+@@||xn--fiqs8s.com^
+@@||xn--xq7j.com^
+@@||xn--mgbaam7a8h.com^
+@@||xn--mgberp4a.com^
+@@||xn--caf-dma.com^
+@@||xn--banco-bb.com^
+@@||xn--mdo-bga.com^
+@@||xn--apple-43a.com^
+@@||xn--google-qc0b.com^
+@@||xn--microsoft-8q0b.com^
+@@||xn--amazon-3ra.com^
+@@||xn--wikipedia-7qa.org^
+@@||xn--mozilla-8qa.org^
+@@||xn--intel-43a.com^
+@@||xn--coca-44d.com^
+@@||xn--nike-43a.com^
+@@||xn--adidas-43a.com^
+@@||xn--facebook-43a.com^
+@@||xn--twitter-43a.com^
+@@||xn--youtube-43a.com^
+@@||xn--reddit-43a.com^
+@@||xn--linkedin-43a.com^
+@@||xn--ibm-43a.com^
+@@||xn--oracle-43a.com^
+@@||xn--paypal-43a.com^
+@@||xn--visa-43a.com^
+@@||xn--mastercard-43a.com^
+@@||xn--un-43a.org^
+@@||xn--eu-43a.eu^
+@@||xn--who-43a.int^
+@@||xn--nasa-43a.gov^
+@@||xn--cia-43a.gov^
+@@||xn--fbi-43a.gov^
+@@||xn--unicef-43a.org^
+@@||xn--unesco-43a.org^
+@@||xn--imf-43a.int^
+@@||xn--oecd-43a.org^
+
+! Favicons tracking — targeted & safe
+! Social networks
+reddit.com##link[rel~=icon]
+instagram.com##link[rel~=icon]
+cdninstagram.com##link[rel~=icon]
+facebook.com##link[rel~=icon]
+fbcdn.net##link[rel~=icon]
+twitter.com##link[rel~=icon]
+tiktok.com##link[rel~=icon]
+tiktokcdn.com##link[rel~=icon]
+youtube.com##link[rel~=icon]
+medium.com##link[rel~=icon]
+linkedin.com##link[rel~=icon]
+pinterest.com##link[rel~=icon]
+snapchat.com##link[rel~=icon]
+discord.com##link[rel~=icon]
+messenger.com##link[rel~=icon]
+whatsapp.com##link[rel~=icon]
+telegram.org##link[rel~=icon]
+weibo.com##link[rel~=icon]
+vk.com##link[rel~=icon]
+line.me##link[rel~=icon]
+kakao.com##link[rel~=icon]
+
+! News / media — global
+nytimes.com##link[rel~=icon]
+washingtonpost.com##link[rel~=icon]
+bbc.com##link[rel~=icon]
+cnn.com##link[rel~=icon]
+reuters.com##link[rel~=icon]
+theguardian.com##link[rel~=icon]
+forbes.com##link[rel~=icon]
+bloomberg.com##link[rel~=icon]
+wired.com##link[rel~=icon]
+techcrunch.com##link[rel~=icon]
+huffpost.com##link[rel~=icon]
+mashable.com##link[rel~=icon]
+vice.com##link[rel~=icon]
+cnbc.com##link[rel~=icon]
+aljazeera.com##link[rel~=icon]
+ft.com##link[rel~=icon]
+economist.com##link[rel~=icon]
+lemonde.fr##link[rel~=icon]
+spiegel.de##link[rel~=icon]
+elpais.com##link[rel~=icon]
+asia.nikkei.com##link[rel~=icon]
+smh.com.au##link[rel~=icon]
+cbc.ca##link[rel~=icon]
+
+! E-commerce / retail
+amazon.com##link[rel~=icon]
+ebay.com##link[rel~=icon]
+walmart.com##link[rel~=icon]
+bestbuy.com##link[rel~=icon]
+nike.com##link[rel~=icon]
+adidas.com##link[rel~=icon]
+apple.com##link[rel~=icon]
+steamdb.info##link[rel~=icon]
+shopdisney.com##link[rel~=icon]
+aliexpress.com##link[rel~=icon]
+etsy.com##link[rel~=icon]
+target.com##link[rel~=icon]
+costco.com##link[rel~=icon]
+newegg.com##link[rel~=icon]
+gamestop.com##link[rel~=icon]
+micromania.fr##link[rel~=icon]
+hm.com##link[rel~=icon]
+zara.com##link[rel~=icon]
+uniqlo.com##link[rel~=icon]
+lazada.com##link[rel~=icon]
+rakuten.com##link[rel~=icon]
+flipkart.com##link[rel~=icon]
+
+! Gaming / streaming / entertainment
+steamcommunity.com##link[rel~=icon]
+playstation.com##link[rel~=icon]
+xbox.com##link[rel~=icon]
+epicgames.com##link[rel~=icon]
+twitch.tv##link[rel~=icon]
+netflix.com##link[rel~=icon]
+hulu.com##link[rel~=icon]
+disneyplus.com##link[rel~=icon]
+spotify.com##link[rel~=icon]
+soundcloud.com##link[rel~=icon]
+roblox.com##link[rel~=icon]
+minecraft.net##link[rel~=icon]
+primevideo.com##link[rel~=icon]
+hbo.com##link[rel~=icon]
+
+! Productivity / cloud / collaboration
+google.com##link[rel~=icon]
+docs.google.com##link[rel~=icon]
+drive.google.com##link[rel~=icon]
+gmail.com##link[rel~=icon]
+office.com##link[rel~=icon]
+onedrive.live.com##link[rel~=icon]
+dropbox.com##link[rel~=icon]
+slack.com##link[rel~=icon]
+notion.so##link[rel~=icon]
+zoom.us##link[rel~=icon]
+github.com##link[rel~=icon]
+gitlab.com##link[rel~=icon]
+bitbucket.org##link[rel~=icon]
+trello.com##link[rel~=icon]
+asana.com##link[rel~=icon]
+microsoft.com##link[rel~=icon]
+apple.com##link[rel~=icon]
+adobe.com##link[rel~=icon]
+
+! Exceptions — critical logins / breakage-prone
+@@wikipedia.org##link[rel~=icon]
+@@mozilla.org##link[rel~=icon]
+@@brave.com##link[rel~=icon]
+@@github.com##link[rel~=icon]
+@@stackoverflow.com##link[rel~=icon]
+@@linkedin.com##link[rel~=icon]
+@@gmail.com##link[rel~=icon]
+@@google.com##link[rel~=icon]
+
+
+! ——— uBlock Enhanced Section ———
+! These rules extend the original list using uBO-only capabilities.
+! They do NOT modify or override the original list.
+
+! Block JS-based favicon reinsertion
+##+js(aopr, HTMLLinkElement.prototype.rel)
+##+js(aopr, HTMLLinkElement.prototype.href)
+
+! Block CSS-based favicon injection
+##:matches-css(background-image: /favicon/i)
+
+! Replace all favicon requests with an empty resource
+||*/*favicon*$image,redirect=empty,important
+
+! Harden IDN blocking with an additional fast regex
+/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+$/document,frame,popup
+
+! Prevent hidden IDN-based redirects
+/xn--[a-z0-9-]+/$all,denyallow=~script,~stylesheet
+
+! Ensure exceptions still work with redirect rule
+@@||*/*favicon*$image,redirect-rule=empty
