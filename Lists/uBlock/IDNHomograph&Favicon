@@ -19,14 +19,14 @@
 ! - Updated only when new, well-established attack vectors emerge
 !
 ! Author: TantalusDrive
-! Repository: https://github.com/TantalusDrive/Sec_filters
+! Repository: https://github.com/TantalusDrive/Secfilters
 
 
-! ——— IDN / Punycode homograph attacks — global ———
+! --- IDN / Punycode homograph attacks ---
 /^(https?://)?[a-z0-9.]{0,25}?xn--.*\.[a-wyz][a-z]{1,17}(/|$)/$popup,frame,document
 /^(https?://)?[a-z0-9.]{0,25}?xn--.*\.x[a-mo-z]{1,6}(/|$)/$popup,frame,document
 
-! Exceptions: verified global domains (brands, institutions, govs)
+! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
 @@||xn--wgv71a.com^
 @@||xn--fiqs8s.com^
@@ -67,7 +67,7 @@
 @@||xn--imf-43a.int^
 @@||xn--oecd-43a.org^
 
-! Favicons tracking — targeted & safe
+! Favicons tracking - targeted & safe
 ! Social networks
 reddit.com##link[rel~=icon]
 instagram.com##link[rel~=icon]
@@ -91,7 +91,7 @@ vk.com##link[rel~=icon]
 line.me##link[rel~=icon]
 kakao.com##link[rel~=icon]
 
-! News / media — global
+! News / media
 nytimes.com##link[rel~=icon]
 washingtonpost.com##link[rel~=icon]
 bbc.com##link[rel~=icon]
@@ -176,7 +176,7 @@ microsoft.com##link[rel~=icon]
 apple.com##link[rel~=icon]
 adobe.com##link[rel~=icon]
 
-! Exceptions — critical logins / breakage-prone
+! Exceptions - critical logins / breakage-prone
 @@wikipedia.org##link[rel~=icon]
 @@mozilla.org##link[rel~=icon]
 @@brave.com##link[rel~=icon]
@@ -187,9 +187,8 @@ adobe.com##link[rel~=icon]
 @@google.com##link[rel~=icon]
 
 
-! ——— uBlock Enhanced Section ———
+! --- uBlock Enhanced Section ---
 ! These rules extend the original list using uBO-only capabilities.
-! They do NOT modify or override the original list.
 
 ! Block JS-based favicon reinsertion
 ##+js(aopr, HTMLLinkElement.prototype.rel)
@@ -198,14 +197,5 @@ adobe.com##link[rel~=icon]
 ! Block CSS-based favicon injection
 ##:matches-css(background-image: /favicon/i)
 
-! Replace all favicon requests with an empty resource
-||*/*favicon*$image,redirect=empty,important
-
 ! Harden IDN blocking with an additional fast regex
 /^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+$/document,frame,popup
-
-! Prevent hidden IDN-based redirects
-/xn--[a-z0-9-]+/$all,denyallow=~script,~stylesheet
-
-! Ensure exceptions still work with redirect rule
-@@||*/*favicon*$image,redirect-rule=empty
