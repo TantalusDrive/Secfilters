@@ -1,4 +1,4 @@
-! Title: IDN Homograph & Favicon Security List
+! Title: IDN Homograph & Favicon Security List - optimized for AdGuard
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
