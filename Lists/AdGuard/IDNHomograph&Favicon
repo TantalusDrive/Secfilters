@@ -9,11 +9,11 @@
 ! Notes: Includes verified exceptions for major brands/institutions to minimize false positives.
 
 
-! ——— IDN / Punycode homograph attacks — global ———
+! --- IDN / Punycode homograph attacks ---
 /^(https?://)?[a-z0-9.]{0,25}?xn--.*\.[a-wyz][a-z]{1,17}(/|$)/$popup,frame,document
 /^(https?://)?[a-z0-9.]{0,25}?xn--.*\.x[a-mo-z]{1,6}(/|$)/$popup,frame,document
 
-! Exceptions: verified global domains (brands, institutions, govs)
+! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
 @@||xn--wgv71a.com^
 @@||xn--fiqs8s.com^
@@ -54,7 +54,7 @@
 @@||xn--imf-43a.int^
 @@||xn--oecd-43a.org^
 
-! Favicons tracking — targeted & safe
+! Favicons tracking - targeted & safe
 ! Social networks
 reddit.com##link[rel~=icon]
 instagram.com##link[rel~=icon]
@@ -78,7 +78,7 @@ vk.com##link[rel~=icon]
 line.me##link[rel~=icon]
 kakao.com##link[rel~=icon]
 
-! News / media — global
+! News / media
 nytimes.com##link[rel~=icon]
 washingtonpost.com##link[rel~=icon]
 bbc.com##link[rel~=icon]
@@ -163,7 +163,7 @@ microsoft.com##link[rel~=icon]
 apple.com##link[rel~=icon]
 adobe.com##link[rel~=icon]
 
-! Exceptions — critical logins / breakage-prone
+! Exceptions - critical logins / breakage-prone
 @@wikipedia.org##link[rel~=icon]
 @@mozilla.org##link[rel~=icon]
 @@brave.com##link[rel~=icon]
