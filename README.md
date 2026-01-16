@@ -1,9 +1,8 @@
 # Security Filter Lists
-> Security-focused filter lists addressing edge-case abuse vectors often overlooked by mainstream filter lists.
+> Addressing edge-case abuse vectors often overlooked by mainstream filter lists.
 
 This repository hosts a small collection of lists designed to mitigate **security edge cases** at the network and browser level.
-
-The lists published here are **not general-purpose adblocking or privacy lists**, they intentionally target **well-defined security threats**, while prioritizing:
+<br>The lists published here are **not general-purpose adblocking or privacy lists**, they intentionally target **well-defined security threats**, while prioritizing:
 
 - long-term stability
 - minimal false positives
@@ -12,18 +11,18 @@ The lists published here are **not general-purpose adblocking or privacy lists**
 ---
 
 ## Design principles
-All lists in this repository follow the same core principles:
+These apply to all lists in this repository:
 
-- **Security-first scope**  
+  **Security-first scope**  
   Only vectors with clear security or abuse implications are addressed.
 
-- **Conservative filtering**  
+  **Conservative filtering**  
   Rules are added only when they are demonstrably safe, reproducible, and do not cause documented site breakage.
 
-- **Low churn / long-term usability**  
+  **Low churn / long-term usability**  
   Lists are designed to remain effective over time with minimal maintenance.
 
-- **Explicit exceptions**  
+  **Explicit exceptions**  
   Verified brands, governments, and institutions are allowlisted where needed to avoid false positives.
 
 ## Available lists
@@ -51,11 +50,7 @@ Targets:
 - aggressively block content without clear security relevance
 
 ## Compatibility
-Each list can be used independently and is compatible with:
-
-- [uBlock Origin](https://ublockorigin.com/)
-- [AdGuard](https://adguard.com/it/adguard-browser-extension/overview.html)
-- [Brave Shields](https://brave.com/shields/)
+Each list can be used independently and is compatible with [uBlock Origin](https://ublockorigin.com/), [AdGuard](https://adguard.com/it/adguard-browser-extension/overview.html), [Brave Shields](https://brave.com/shields/) and [AdBlock Plus](https://adblockplus.org/).
 
 ## Attribution & inspiration
 Some lists are conceptually inspired by existing community work. No content is copied, all lists are independently curated with distinct scope, structure, and maintenance philosophy.
