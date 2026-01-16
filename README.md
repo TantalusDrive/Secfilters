@@ -1,10 +1,7 @@
 # Security Filter Lists
-This repository hosts a small collection of **security-focused filter lists**
-designed to mitigate **well-defined abuse and attack vectors** at the network
-and browser level.
+This repository hosts a small collection of **security-focused filter lists**, designed to mitigate **well-defined abuse and attack vectors** at the network and browser level that are not usually addressed in common security lists.
 
-The lists published here are **not general-purpose adblocking or privacy lists**.
-They intentionally target **well-defined security threats** while prioritizing:
+The lists published here are **not general-purpose adblocking or privacy lists**, they intentionally target **well-defined security threats** while prioritizing:
 
 - long-term stability
 - minimal false positives
@@ -37,29 +34,25 @@ Targets:
 - **Persistent favicon-based tracking**  
   Mitigates browser fingerprinting techniques abusing favicon cache behavior.
 
-This list is a conceptual successor inspired by the work of DandelionSprout,
-while being independently maintained and curated.
+This list is a conceptual successor inspired by the work of DandelionSprout, while being independently maintained and curated.
 
-## What this repository does not aim to do 🧩
+## What this repository does not aim to do
 This repository intentionally does **not** aim to:
 
-- replace general-purpose adblocking lists
+- replace general-purpose adblocking lists or DNS filter lists
 - block generic analytics, beacons, or advertising
 - interfere with legitimate site functionality
 - aggressively block content without clear security relevance
 
 ## Compatibility 🛠
-All lists are compatible with:
+Each list can be used independently and is compatible with:
 
 - uBlock Origin
 - AdGuard
-- compatible DNS / content blocking solutions
+- Brave Shields
 
-Each list can be used independently.
-
-## Attribution & inspiration 📜
-Some lists are conceptually inspired by existing community work, notably by DandelionSprout.
-<br>No content is copied — all lists are independently curated, with distinct scope, structure, and maintenance philosophy.
+## Attribution & inspiration
+Some lists are conceptually inspired by existing community work. No content is copied, all lists are independently curated with distinct scope, structure, and maintenance philosophy.
 
 ## License ⚖️
 This repository and its contents are released under the Creative Commons Attribution‑NonCommercial‑ShareAlike 4.0 International (CC BY‑NC‑SA 4.0) license.
