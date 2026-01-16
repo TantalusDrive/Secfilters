@@ -1,25 +1,12 @@
-! ——— IDN Homograph & Favicon Security List (AdGuard) ———
-!
-! Conceptual successor inspired by:
-! - "IDN Homograph Attack Protection"
-! - "Anti-Favicon List"
-!   by DandelionSprout
-!
-! Focus:
-! - Mitigate phishing and impersonation via IDN / Punycode homograph attacks
-! - Prevent persistent favicon-based tracking and identification techniques
-!
-! Scope & philosophy:
-! - Security-focused (not a generic privacy or tracker-blocking list)
-! - Conservative by design to minimize false positives and site breakage
-! - Exceptions included for verified brands, governments, and institutions
-!
-! Maintenance model:
-! - Intended as a stable, long-term list
-! - Updated only when new, well-established attack vectors emerge
-!
+! Title: IDN Homograph & Favicon Security List
+! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
+! without breaking site functionality.
+! Scope: Security filters only, not general ad/tracker blocking.
+! Compatible: AdGuard, uBlock Origin
 ! Author: TantalusDrive
-! Repository: https://github.com/TantalusDrive/Sec_filters
+! Repository: https://github.com/TantalusDrive/Secfilters
+! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
+! Notes: Includes verified exceptions for major brands/institutions to minimize false positives.
 
 
 ! ——— IDN / Punycode homograph attacks — global ———
