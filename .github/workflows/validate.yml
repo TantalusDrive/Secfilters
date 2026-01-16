@@ -1,0 +1,72 @@
+name: Validate Filter Lists
+
+on:
+  push:
+    paths:
+      - 'Lists/**'
+  pull_request:
+    paths:
+      - 'Lists/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Basic list sanity checks
+        run: |
+          echo "Running basic sanity checks on filter lists..."
+
+          for file in $(find Lists -type f -name "*.txt"); do
+            echo "Checking $file"
+
+            # File must not be empty
+            if [ ! -s "$file" ]; then
+              echo "ERROR: $file is empty"
+              exit 1
+            fi
+
+            # No CRLF line endings
+            if file "$file" | grep -q CRLF; then
+              echo "ERROR: $file contains CRLF line endings"
+              exit 1
+            fi
+
+            # No NULL bytes
+            if grep -q $'\x00' "$file"; then
+              echo "ERROR: $file contains NULL bytes"
+              exit 1
+            fi
+          done
+
+          echo "Basic validation passed."
+
+      - name: Security-oriented static checks
+        run: |
+          echo "Running security-oriented checks..."
+
+          for file in $(find Lists -type f -name "*.txt"); do
+
+            # Flag dangerous global options
+            if grep -En '(\$all|important|denyallow)' "$file"; then
+              echo "WARNING: Potentially dangerous filter option detected in $file"
+              echo "Ensure this rule is intentional and well-documented."
+            fi
+
+            # Detect overly broad wildcard network filters
+            if grep -En '^\|\|\*\$' "$file"; then
+              echo "WARNING: Broad wildcard network filter in $file"
+              echo "Check scope and add explicit justification."
+            fi
+
+            # Detect unbalanced regex delimiters
+            if grep -En '^/.+[^/]$' "$file"; then
+              echo "WARNING: Possible malformed regex in $file"
+            fi
+
+          done
+
+          echo "Security checks completed."
