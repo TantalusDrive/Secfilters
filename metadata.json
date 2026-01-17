@@ -1,0 +1,34 @@
+{
+  "lists": [
+    {
+      "name": "IDN Homograph & Favicon Security List",
+      "description": "Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking.",
+      "formats": ["AdGuard", "Brave"],
+      "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/main/Lists/AdGuard/IDNHomograph&Favicon.txt",
+      "license": "CC BY-NC-SA 4.0",
+      "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
+      "maintainer": "TantalusDrive",
+      "homepage": "https://github.com/TantalusDrive/Secfilters"
+    },
+    {
+      "name": "IDN Homograph & Favicon Security List - optimized for uBlock Origin",
+      "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon tracking. Maintains site compatibility and includes exceptions for verified brands, governments, and institutions.",
+      "formats": ["uBlock Origin"],
+      "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/main/Lists/uBlock/IDNHomograph&Favicon.txt",
+      "license": "CC BY-NC-SA 4.0",
+      "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
+      "maintainer": "TantalusDrive",
+      "homepage": "https://github.com/TantalusDrive/Secfilters"
+    },
+    {
+      "name": "IDN Homograph & Favicon Security List - optimized for ABP",
+      "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon tracking. Maintains site compatibility and includes exceptions for verified brands, governments, and institutions.",
+      "formats": ["ABP"],
+      "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/main/Lists/ABP/IDNHomograph&Favicon.txt",
+      "license": "CC BY-NC-SA 4.0",
+      "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
+      "maintainer": "TantalusDrive",
+      "homepage": "https://github.com/TantalusDrive/Secfilters"
+    }
+  ]
+}
