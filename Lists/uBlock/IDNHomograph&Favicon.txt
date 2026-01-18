@@ -52,14 +52,22 @@
 @@||xn--unesco-43a.org^
 @@||xn--imf-43a.int^
 @@||xn--oecd-43a.org^
-@@||xn--mgba3a3ejt^! Amazon.cn (亚马逊 TLD)
-@@||xn--cckwcxetd^! Amazon Katakana TLD
-@@||xn--mgbaakc7dvf^! Etisalat/اتصالات
-@@||xn--8y0a063a^! China United Network Communications (联通)
-@@||xn--6frz82g^! China Mobile (移动)
-@@||xn--fiq64b^! CITIC Group (.中信)
-@@||xn--p1ai^! .рф (Russian IDN ccTLD)
-@@||xn--j1amh^! .укр (Ukrainian IDN ccTLD)
+! Amazon.cn (亚马逊 TLD)
+@@||xn--mgba3a3ejt^
+! Amazon Katakana TLD
+@@||xn--cckwcxetd^
+! Etisalat/اتصالات
+@@||xn--mgbaakc7dvf^
+! China United Network Communications (联通)
+@@||xn--8y0a063a^
+! China Mobile (移动)
+@@||xn--6frz82g^
+! CITIC Group (.中信)
+@@||xn--fiq64b^
+! .рф (Russian IDN ccTLD)
+@@||xn--p1ai^
+! .укр (Ukrainian IDN ccTLD)
+@@||xn--j1amh^
 
 ! Favicons tracking - targeted & safe
 ! Social networks
@@ -176,7 +184,7 @@ mozilla.org#@#link[rel~=icon]
 brave.com#@#link[rel~=icon]
 github.com#@#link[rel~=icon]
 stackoverflow.com#@#link[rel~=icon]
-linkedin.com#@#link[rel~=icon]! Only allow for login / enterprise use
+linkedin.com#@#link[rel~=icon]
 gmail.com#@#link[rel~=icon]
 google.com#@#link[rel~=icon]
 
