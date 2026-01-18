@@ -3,7 +3,7 @@
     {
       "name": "IDN Homograph & Favicon Security List",
       "description": "Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking.",
-      "formats": ["AdGuard", "Brave"],
+      "formats": ["ABP", "Brave"],
       "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/refs/heads/main/Lists/Standard/IDNHomograph%26Favicon.txt",
       "license": "CC BY-NC-SA 4.0",
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
@@ -11,7 +11,7 @@
       "homepage": "https://github.com/TantalusDrive/Secfilters"
     },
     {
-      "name": "IDN Homograph & Favicon Security List - optimized for uBlock Origin",
+      "name": "IDN Homograph & Favicon Security List - uBlock Origin version",
       "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon tracking. Maintains site compatibility and includes exceptions for verified brands, governments, and institutions.",
       "formats": ["uBlock Origin"],
       "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/refs/heads/main/Lists/uBlock/IDNHomograph%26Favicon.txt",
@@ -21,10 +21,10 @@
       "homepage": "https://github.com/TantalusDrive/Secfilters"
     },
     {
-      "name": "IDN Homograph & Favicon Security List - optimized for ABP",
+      "name": "IDN Homograph & Favicon Security List - AdGuard version",
       "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon tracking. Maintains site compatibility and includes exceptions for verified brands, governments, and institutions.",
-      "formats": ["ABP"],
-      "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/refs/heads/main/Lists/ABP/IDNHomograph%26Favicon.txt",
+      "formats": ["AdGuard"],
+      "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/refs/heads/main/Lists/AdGuard/IDNHomograph%26Favicon.txt",
       "license": "CC BY-NC-SA 4.0",
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
