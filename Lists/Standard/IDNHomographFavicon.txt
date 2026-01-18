@@ -52,21 +52,21 @@
 @@||xn--unesco-43a.org^
 @@||xn--imf-43a.int^
 @@||xn--oecd-43a.org^
-! Amazon.cn (亚马逊 TLD)
+! Amazon.cn
 @@||xn--mgba3a3ejt^
 ! Amazon Katakana TLD
 @@||xn--cckwcxetd^
-! Etisalat/اتصالات
+! Etisalat
 @@||xn--mgbaakc7dvf^
-! China United Network Communications (联通)
+! China United Network Communications
 @@||xn--8y0a063a^
-! China Mobile (移动)
+! China Mobile
 @@||xn--6frz82g^
-! CITIC Group (.中信)
+! CITIC Group
 @@||xn--fiq64b^
-! .рф (Russian IDN ccTLD)
+! Russian IDN ccTLD
 @@||xn--p1ai^
-! .укр (Ukrainian IDN ccTLD)
+! Ukrainian IDN ccTLD
 @@||xn--j1amh^
 
 ! Favicons tracking - targeted & safe
