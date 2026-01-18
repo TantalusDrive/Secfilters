@@ -2,7 +2,7 @@
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
-! Compatible: ABP, Brave Shields, uBlock Origin
+! Compatible: ABP, Brave Shields
 ! Author: TantalusDrive
 ! Repository: https://github.com/TantalusDrive/Secfilters
 ! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
