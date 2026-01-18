@@ -4,7 +4,7 @@
       "name": "IDN Homograph & Favicon Security List",
       "description": "Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking.",
       "formats": ["ABP", "Brave"],
-      "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/refs/heads/main/Lists/Standard/IDNHomograph%26Favicon.txt",
+      "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/refs/heads/main/Lists/Standard/IDNHomographFavicon.txt",
       "license": "CC BY-NC-SA 4.0",
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
