@@ -1,4 +1,4 @@
-! Title: IDN Homograph & Favicon Security List
+! Title: IDN Homograph / Favicon Security List
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
@@ -69,7 +69,7 @@
 ! Ukrainian IDN ccTLD
 @@||xn--j1amh^
 
-! Favicons tracking - targeted & safe
+! Favicons tracking
 ! Social networks
 reddit.com##link[rel~=icon]
 instagram.com##link[rel~=icon]
