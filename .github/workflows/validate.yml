@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
       - 'Lists/**'
+  workflow_dispatch:
 
 jobs:
   validate:
@@ -14,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@8ade135a41bc03ea155e62d9c7d6f4d7f8f6d3b3
 
       - name: Basic list sanity checks
         run: |
@@ -23,19 +24,16 @@ jobs:
           for file in $(find Lists -type f -name "*.txt"); do
             echo "Checking $file"
 
-            # File must not be empty
             if [ ! -s "$file" ]; then
               echo "ERROR: $file is empty"
               exit 1
             fi
 
-            # No CRLF line endings
             if file "$file" | grep -q CRLF; then
               echo "ERROR: $file contains CRLF line endings"
               exit 1
             fi
 
-            # No NULL bytes
             if grep -q $'\x00' "$file"; then
               echo "ERROR: $file contains NULL bytes"
               exit 1
@@ -50,20 +48,15 @@ jobs:
 
           for file in $(find Lists -type f -name "*.txt"); do
 
-            # Flag dangerous global options
             if grep -En '(\$all|important|denyallow)' "$file"; then
               echo "WARNING: Potentially dangerous filter option detected in $file"
-              echo "Ensure this rule is intentional and well-documented."
             fi
 
-            # Detect overly broad wildcard network filters
             if grep -En '^\|\|\*\$' "$file"; then
               echo "WARNING: Broad wildcard network filter in $file"
-              echo "Check scope and add explicit justification."
             fi
 
-            # Detect unbalanced regex delimiters
-            if grep -En '^/.+[^/]$' "$file"; then
+            if grep -En '^/.+[^/]\s*$' "$file"; then
               echo "WARNING: Possible malformed regex in $file"
             fi
 
