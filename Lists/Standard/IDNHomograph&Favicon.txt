@@ -10,7 +10,7 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-||xn--
+||xn--$document,frame
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
