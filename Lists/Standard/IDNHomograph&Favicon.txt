@@ -1,8 +1,8 @@
-! Title: IDN Homograph & Favicon Security List - Brave Shields version
+! Title: IDN Homograph & Favicon Security List
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
-! Compatible: AdGuard, Brave Shields, uBlock Origin
+! Compatible: ABP, Brave Shields, uBlock Origin
 ! Author: TantalusDrive
 ! Repository: https://github.com/TantalusDrive/Secfilters
 ! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
