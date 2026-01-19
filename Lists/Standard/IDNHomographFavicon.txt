@@ -14,6 +14,10 @@
 ! --- IDN / Punycode homograph attacks ---
 ||xn--$document,frame
 
+! Block favicon image loads on Punycode domains
+||xn--^/*.ico$image
+||xn--^/*.png$image
+
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
 @@||xn--wgv71a.com^
