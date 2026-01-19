@@ -12,7 +12,7 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-||xn--$document,frame,popup,important
+/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,24}(/|$)/$document,frame,popup,important
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
@@ -202,9 +202,6 @@ dropbox.com#@#link[rel~=icon]
 docs.google.com#@#link[rel~=icon]
 drive.google.com#@#link[rel~=icon]
 
-! --- uBlock Enhanced Section ---
-! These rules extend the original list using uBO-only capabilities.
-
 ! Block JS-based favicon reinsertion
 ##+js(aopr, HTMLLinkElement.prototype.rel, , , domain=/xn--/)
 ##+js(aopr, HTMLLinkElement.prototype.href, , , domain=/xn--/)
@@ -214,6 +211,3 @@ drive.google.com#@#link[rel~=icon]
 ! Block CSS-based favicon injection
 ##:matches-css(background-image: /favicon/i, domain=/xn--/)
 ##:matches-css(background-image: /favicon/i, domain=~wikipedia.org|~mozilla.org|~brave.com|~github.com|~stackoverflow.com|~linkedin.com|~gmail.com|~google.com|~microsoft.com|~office.com|~outlook.com|~teams.microsoft.com|~slack.com|~zoom.us|~notion.so|~apple.com|~icloud.com|~dropbox.com|~docs.google.com|~drive.google.com)
-
-! Harden IDN blocking with an additional fast regex
-/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,24}(/|$)/$document,frame,popup,important
