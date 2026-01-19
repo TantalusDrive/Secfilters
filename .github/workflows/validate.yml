@@ -1,4 +1,4 @@
-name: Validate Filter Lists
+name: Validate Filter Lists - Full
 
 on:
   push:
@@ -15,51 +15,68 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@v3
 
-      - name: Basic list sanity checks
+      - name: Full list validation
+        shell: bash
         run: |
-          echo "Running basic sanity checks on filter lists..."
+          echo "Starting filter lists validation..."
+          ERRORS=0
 
           for file in $(find Lists -type f -name "*.txt"); do
-            echo "Checking $file"
+            echo "Checking $file..."
 
+            # 1. File empty
             if [ ! -s "$file" ]; then
               echo "ERROR: $file is empty"
-              exit 1
+              ERRORS=$((ERRORS+1))
             fi
 
-            if file "$file" | grep -q CRLF; then
+            # 2. CRLF line endings
+            if grep -q $'\r' "$file"; then
               echo "ERROR: $file contains CRLF line endings"
-              exit 1
+              ERRORS=$((ERRORS+1))
             fi
 
+            # 3. NULL bytes
             if grep -q $'\x00' "$file"; then
               echo "ERROR: $file contains NULL bytes"
-              exit 1
+              ERRORS=$((ERRORS+1))
             fi
-          done
 
-          echo "Basic validation passed."
+            # 4. Trailing whitespace (warning)
+            if grep -En '[[:space:]]+$' "$file"; then
+              echo "WARNING: Trailing whitespace detected in $file"
+            fi
 
-      - name: Security-oriented static checks
-        run: |
-          echo "Running security-oriented checks..."
+            # 5. Duplicate lines (non-comment)
+            DUP_LINES=$(awk '!/^!/{print}' "$file" | sort | uniq -d)
+            if [ -n "$DUP_LINES" ]; then
+              echo "WARNING: Duplicate lines detected in $file"
+              echo "$DUP_LINES"
+            fi
 
-          for file in $(find Lists -type f -name "*.txt"); do
+            # 6. Malformed comment characters
+            if grep -En '^!.*[^[:print:][:space:]]' "$file"; then
+              echo "WARNING: Non-printable characters in comments in $file"
+            fi
 
+            # 7. Security-oriented checks (warning)
             if grep -En '(\$all|important|denyallow)' "$file"; then
-              echo "WARNING: Potentially dangerous filter option detected in $file"
+              echo "WARNING: Potentially dangerous filter option in $file"
             fi
-
             if grep -En '^\|\|\*\$' "$file"; then
               echo "WARNING: Broad wildcard network filter in $file"
             fi
-
-            if grep -En '^/.+[^/]\s*$' "$file"; then
+            if grep -EP '^/.+[^/][[:space:]]*$' "$file"; then
               echo "WARNING: Possible malformed regex in $file"
             fi
 
           done
 
-          echo "Security checks completed."
+          if [ $ERRORS -gt 0 ]; then
+            echo "Validation completed with $ERRORS critical error(s)."
+            exit 1
+          else
+            echo "Validation completed successfully. Warnings may exist."
+          fi
