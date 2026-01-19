@@ -1,9 +1,9 @@
 # Changelog
 
-This document tracks **meaningful, user-relevant events** in the lifecycle of this repository.
+This document tracks meaningful, user-relevant events in the repository lifecycle.
 
-This project follows an **event-based versioning model**: only changes that affect security scope, threat models, or list availability are documented here.  
-Minor rule tuning, exception adjustments, or refactors are excluded.
+We follow an event-based versioning approach: only changes that affect security scope, threat models, or list availability are recorded.  
+Minor rule tuning, exception adjustments, or formatting refactors are not included.
 
 ---
 
@@ -11,23 +11,25 @@ Minor rule tuning, exception adjustments, or refactors are excluded.
 
 ### Initial public release
 
-First public release of the **Security Filter Lists** repository.  
-Introduced:
+- First public release of the **Security Filter Lists** repository.
+- Introduced:
+  - **IDN Homograph & Favicon Security List**  
+    Available in uBlock Origin, AdGuard/Brave, and ABP-compatible formats.
+- Established repository-wide design principles:
+  - Security-focused scope
+  - Conservative filtering
+  - Long-term stability
+  - Minimal false positives and site breakage
+- Applied non-commercial, share-alike licensing (CC BY-NC-SA 4.0).
 
-- **IDN Homograph & Favicon Security List**  
-  - Available in uBlock Origin, AdGuard, Brave Shields, and AdBlock Plus formats.
-
-Defined repository-wide design principles:  
-- security-first scope  
-- conservative filtering  
-- low churn / long-term stability  
-- explicit exceptions to minimize false positives and site breakage
-
-Established non-commercial, share-alike licensing model (CC BY-NC-SA 4.0).
+> This release reflects the initial curated selection of rules verified for safety and cross-browser compatibility.
 
 ---
 
-Future versions will be released **only** when:  
-- a new class of security abuse is addressed,  
-- the scope or philosophy of an existing list changes,  
-- or a new list is added to the repository.
+### Future versions
+
+Updates will only be recorded when:
+
+- A new class of security abuse is addressed.  
+- The scope or philosophy of an existing list changes.  
+- A new list is added to the repository.
