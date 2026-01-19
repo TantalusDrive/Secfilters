@@ -12,7 +12,7 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-||xn--$document,frame,popup
+||xn--$document,frame,popup,important
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
@@ -189,17 +189,31 @@ stackoverflow.com#@#link[rel~=icon]
 linkedin.com#@#link[rel~=icon]
 gmail.com#@#link[rel~=icon]
 google.com#@#link[rel~=icon]
-
+microsoft.com#@#link[rel~=icon]
+office.com#@#link[rel~=icon]
+outlook.com#@#link[rel~=icon]
+teams.microsoft.com#@#link[rel~=icon]
+slack.com#@#link[rel~=icon]
+zoom.us#@#link[rel~=icon]
+notion.so#@#link[rel~=icon]
+apple.com#@#link[rel~=icon]
+icloud.com#@#link[rel~=icon]
+dropbox.com#@#link[rel~=icon]
+docs.google.com#@#link[rel~=icon]
+drive.google.com#@#link[rel~=icon]
 
 ! --- uBlock Enhanced Section ---
 ! These rules extend the original list using uBO-only capabilities.
 
 ! Block JS-based favicon reinsertion
-##+js(aopr, HTMLLinkElement.prototype.rel)
-##+js(aopr, HTMLLinkElement.prototype.href)
+##+js(aopr, HTMLLinkElement.prototype.rel, , , domain=/xn--/)
+##+js(aopr, HTMLLinkElement.prototype.href, , , domain=/xn--/)
+##+js(aopr, HTMLLinkElement.prototype.rel, , , domain=~wikipedia.org|~mozilla.org|~brave.com|~github.com|~stackoverflow.com|~linkedin.com|~gmail.com|~google.com|~microsoft.com|~office.com|~outlook.com|~teams.microsoft.com|~slack.com|~zoom.us|~notion.so|~apple.com|~icloud.com|~dropbox.com|~docs.google.com|~drive.google.com)
+##+js(aopr, HTMLLinkElement.prototype.href, , , domain=~wikipedia.org|~mozilla.org|~brave.com|~github.com|~stackoverflow.com|~linkedin.com|~gmail.com|~google.com|~microsoft.com|~office.com|~outlook.com|~teams.microsoft.com|~slack.com|~zoom.us|~notion.so|~apple.com|~icloud.com|~dropbox.com|~docs.google.com|~drive.google.com)
 
 ! Block CSS-based favicon injection
-##:matches-css(background-image: /favicon/i)
+##:matches-css(background-image: /favicon/i, domain=/xn--/)
+##:matches-css(background-image: /favicon/i, domain=~wikipedia.org|~mozilla.org|~brave.com|~github.com|~stackoverflow.com|~linkedin.com|~gmail.com|~google.com|~microsoft.com|~office.com|~outlook.com|~teams.microsoft.com|~slack.com|~zoom.us|~notion.so|~apple.com|~icloud.com|~dropbox.com|~docs.google.com|~drive.google.com)
 
 ! Harden IDN blocking with an additional fast regex
-/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+$/document,frame,popup
+/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+(\.[a-z]{2,24})?$/document,frame,popup,important
