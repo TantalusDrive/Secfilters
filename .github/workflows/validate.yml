@@ -1,4 +1,4 @@
-name: Validate Filter Lists
+name: Validate Filter Lists - Smart Final
 
 on:
   push:
@@ -40,11 +40,12 @@ jobs:
               sed -i 's/\r$//' "$file"
             fi
 
-            # NULL bytes (warning only)
+            # NULL bytes (log + remove)
             if grep -q $'\x00' "$file"; then
               grep -Pn $'\x00' "$file" | while IFS=: read -r lineno _; do
-                echo "WARNING: NULL byte detected in $file at line $lineno"
+                echo "NOTICE: Removing NULL byte in $file at line $lineno"
               done
+              tr -d '\000' < "$file" > "$file.tmp" && mv "$file.tmp" "$file"
             fi
 
             # 1. File empty (critical)
