@@ -3,33 +3,34 @@
 
 This repository hosts a small set of filter lists targeting specific security abuse vectors at the network and browser level.
 
-They are not intended for general-purpose adblocking or privacy use. The focus is on well-defined threats, with an emphasis on stability and avoiding site breakage.
+They are not meant for general-purpose adblocking or privacy use. In practice, they focus on well-defined threats, prioritizing stability, minimal false positives, and avoiding site breakage.
 
 ## Design principles
 
 **Security-first scope**  
-Only vectors with clear security implications are addressed.
+We only address vectors with clear, observable security implications. Each rule is added with a deliberate focus on mitigating actual threats.
 
 **Conservative filtering**  
-Rules are added only when reproducible and demonstrably safe.
+Rules are included only when reproducible and demonstrably safe. We avoid speculative or aggressive filtering that could disrupt legitimate site functionality.
 
 **Low churn**  
-Lists are designed to remain effective over time with minimal maintenance.
+Lists are designed to remain effective over time, requiring minimal maintenance. Updates occur only when security risks evolve or new edge cases are discovered.
 
 **Explicit exceptions**  
-Allowlisting is used where required to avoid false positives.
+Major brands, governments, and institutions are deliberately allowlisted to prevent false positives or critical login issues.
 
 ## Compatibility
 
-- Brave Shields and AdBlock Plus should use the **Standard** lists.
-- uBlock Origin and AdGuard should use their **engine-specific** variants.
+- Brave Shields and AdBlock Plus should use the **Standard** lists.  
+- uBlock Origin and AdGuard should use their **engine-specific** variants.  
+- Each list is intended to work independently; you should subscribe only to the lists relevant to your setup.
 
 ## What this repository does not aim to do
 
-- replace general-purpose adblocking or DNS filter lists
-- block generic analytics, advertising, or trackers
-- interfere with legitimate site functionality
-- apply speculative or aggressive filtering
+- Replace general-purpose adblocking or DNS filter lists.  
+- Block generic analytics, advertising, or trackers.  
+- Interfere with legitimate site functionality.  
+- Apply speculative or aggressive filtering without clear security justification.
 
 ---
 
@@ -37,32 +38,31 @@ Allowlisting is used where required to avoid false positives.
 
 ### IDN Homograph & Favicon Security List
 
-This list is conceptually inspired by the work of [DandelionSprout](https://github.com/DandelionSprout), while being independently curated, structured, and maintained.
+This list is conceptually inspired by the work of [DandelionSprout](https://github.com/DandelionSprout), while remaining independently curated, structured, and maintained.
 
 **Targets**:
 
 - **[IDN / Punycode homograph attacks](https://en.wikipedia.org/wiki/IDN_homograph_attack)**  
-  Mitigates phishing and impersonation via visually confusable internationalized domain names.
+  Prevents phishing and impersonation using visually confusable internationalized domain names.  
 
 - **Persistent [favicon-based tracking](https://www.ghacks.net/2021/01/22/favicons-may-be-used-to-track-users/)**  
-  Reduces fingerprinting techniques abusing favicon cache persistence.
+  Reduces fingerprinting techniques exploiting favicon cache persistence.  
 
->**URLs**
+>**Subscription URLs**
 >
->- **Standard (Brave Shields / ABP):**
->  https://tantalusdrive.github.io/Secfilters/Lists/Standard/IDNHomographFavicon.txt
+>- **Standard (Brave Shields / ABP):** https://tantalusdrive.github.io/Secfilters/Lists/Standard/IDNHomographFavicon.txt
 >
->- **uBlock Origin:**  
->  https://tantalusdrive.github.io/Secfilters/Lists/uBlock/IDNHomographFavicon.txt
+>- **uBlock Origin:** https://tantalusdrive.github.io/Secfilters/Lists/uBlock/IDNHomographFavicon.txt
 >
->- **AdGuard:**  
->  https://tantalusdrive.github.io/Secfilters/Lists/AdGuard/IDNHomographFavicon.txt
+>- **AdGuard:** https://tantalusdrive.github.io/Secfilters/Lists/AdGuard/IDNHomographFavicon.txt
+>
+> Raw GitHub URLs are available only as fallback, but we recommend using the GitHub Pages endpoints for reliability and HTTPS support.
 
 ---
 
 ## Attribution & inspiration
 
-Some lists are conceptually inspired by existing community work. No content is copied; all lists are independently curated with a distinct scope and maintenance philosophy.
+Some lists are conceptually inspired by community work. No content is copied; all rules are independently curated, with distinct scope and maintenance philosophy.
 
 ## License
 
