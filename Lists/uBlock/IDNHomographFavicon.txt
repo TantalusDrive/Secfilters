@@ -216,4 +216,4 @@ drive.google.com#@#link[rel~=icon]
 ##:matches-css(background-image: /favicon/i, domain=~wikipedia.org|~mozilla.org|~brave.com|~github.com|~stackoverflow.com|~linkedin.com|~gmail.com|~google.com|~microsoft.com|~office.com|~outlook.com|~teams.microsoft.com|~slack.com|~zoom.us|~notion.so|~apple.com|~icloud.com|~dropbox.com|~docs.google.com|~drive.google.com)
 
 ! Harden IDN blocking with an additional fast regex
-/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+(\.[a-z]{2,24})?$/document,frame,popup,important
+/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,24}(/|$)/$document,frame,popup,important
