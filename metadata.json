@@ -8,7 +8,7 @@
       "license": "CC BY-NC-SA 4.0",
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
-      "homepage": "https://github.com/TantalusDrive/Secfilters"
+      "homepage": "https://github.com/TantalusDrive/Secfilters",
       "version": "v1.0.0",
       "last_updated": "2026-01-19"
     },
@@ -20,7 +20,7 @@
       "license": "CC BY-NC-SA 4.0",
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
-      "homepage": "https://github.com/TantalusDrive/Secfilters"
+      "homepage": "https://github.com/TantalusDrive/Secfilters",
       "version": "v1.0.0",
       "last_updated": "2026-01-19"
     },
@@ -32,7 +32,7 @@
       "license": "CC BY-NC-SA 4.0",
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
-      "homepage": "https://github.com/TantalusDrive/Secfilters"
+      "homepage": "https://github.com/TantalusDrive/Secfilters",
       "version": "v1.0.0",
       "last_updated": "2026-01-19"
     }
