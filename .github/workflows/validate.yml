@@ -25,10 +25,9 @@ jobs:
           echo "Starting smart validation..."
           ERRORS=0
 
-          for file in $(find Lists -type f -name "*.txt"); do
+          while IFS= read -r -d '' file; do
             echo "Checking $file..."
 
-            # Backup file (always overwrite the previous one)
             cp "$file" "$file.bak"
 
             # Remove BOM
@@ -40,35 +39,45 @@ jobs:
               sed -i 's/\r$//' "$file"
             fi
 
-            # NULL bytes (log + remove)
-            if grep -q $'\x00' "$file"; then
-              grep -Pn $'\x00' "$file" | while IFS=: read -r lineno _; do
+            # NULL bytes (detect + remove correctly)
+            if LC_ALL=C grep -Pq '\x00' "$file"; then
+              LC_ALL=C grep -Pn '\x00' "$file" | while IFS=: read -r lineno _; do
                 echo "NOTICE: Removing NULL byte in $file at line $lineno"
               done
               tr -d '\000' < "$file" > "$file.tmp" && mv "$file.tmp" "$file"
             fi
 
             # 1. File empty (critical)
-            [ ! -s "$file" ] && { echo "ERROR: $file is empty"; ERRORS=$((ERRORS+1)); }
+            if [ ! -s "$file" ]; then
+              echo "ERROR: $file is empty"
+              ERRORS=$((ERRORS+1))
+            fi
 
             # 2. Trailing whitespace (warning)
-            grep -En '[[:space:]]+$' "$file" || true && echo "WARNING: Trailing whitespace detected in $file"
+            if grep -En '[[:space:]]+$' "$file"; then
+              echo "WARNING: Trailing whitespace detected in $file"
+            fi
 
             # 3. Duplicate lines (non-comment, non-empty)
             DUP_LINES=$(awk '!/^!/ && NF{print}' "$file" | sort | uniq -d)
-            [ -n "$DUP_LINES" ] && { echo "WARNING: Duplicate lines detected in $file"; echo "$DUP_LINES"; }
+            if [ -n "$DUP_LINES" ]; then
+              echo "WARNING: Duplicate lines detected in $file"
+              echo "$DUP_LINES"
+            fi
 
             # 4. Malformed comment characters
-            grep -En '^!.*[^[:print:][:space:]]' "$file" || true && echo "WARNING: Non-printable characters in comments in $file"
+            if grep -En '^!.*[^[:print:][:space:]]' "$file"; then
+              echo "WARNING: Non-printable characters in comments in $file"
+            fi
 
             # 5. Security-oriented checks (warning)
-            grep -F '\$all' "$file" || true && echo "WARNING: $file contains \$all"
-            grep -F 'important' "$file" || true && echo "WARNING: $file contains important"
-            grep -F 'denyallow' "$file" || true && echo "WARNING: $file contains denyallow"
-            grep -F '||*' "$file" || true && echo "WARNING: $file contains broad wildcard network filter"
-            grep -EP '^/.+[^/][[:space:]]*$' "$file" || true && echo "WARNING: Possible malformed regex in $file"
+            grep -F '\$all' "$file"       && echo "WARNING: $file contains \$all"
+            grep -F 'important' "$file"  && echo "WARNING: $file contains important"
+            grep -F 'denyallow' "$file"  && echo "WARNING: $file contains denyallow"
+            grep -F '||*' "$file"        && echo "WARNING: $file contains broad wildcard network filter"
+            grep -EP '^/.+[^/][[:space:]]*$' "$file" && echo "WARNING: Possible malformed regex in $file"
 
-          done
+          done < <(find Lists -type f -name "*.txt" -print0)
 
           if [ $ERRORS -gt 0 ]; then
             echo "Validation completed with $ERRORS critical error(s)."
