@@ -12,8 +12,7 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-/^(https?://)?[a-z0-9.]{0,25}?xn--.*\.[a-wyz][a-z]{1,17}(/|$)/$popup,frame,document
-/^(https?://)?[a-z0-9.]{0,25}?xn--.*\.x[a-mo-z]{1,6}(/|$)/$popup,frame,document
+/^(https?:\/\/)?[a-z0-9.]{0,25}?xn--[a-z0-9-]+\.[a-z]{2,24}(\/|$)/$popup,frame,document
 
 ! Block favicon image loads on Punycode domains
 ||xn--^$image,domain=~
@@ -186,11 +185,23 @@ apple.com##link[rel~=icon]
 adobe.com##link[rel~=icon]
 
 ! Exceptions - critical logins / breakage-prone
-@@wikipedia.org##link[rel~=icon]
-@@mozilla.org##link[rel~=icon]
-@@brave.com##link[rel~=icon]
-@@github.com##link[rel~=icon]
-@@stackoverflow.com##link[rel~=icon]
-@@linkedin.com##link[rel~=icon]
-@@gmail.com##link[rel~=icon]
-@@google.com##link[rel~=icon]
+wikipedia.org#@#link[rel~=icon]
+mozilla.org#@#link[rel~=icon]
+brave.com#@#link[rel~=icon]
+github.com#@#link[rel~=icon]
+stackoverflow.com#@#link[rel~=icon]
+linkedin.com#@#link[rel~=icon]
+gmail.com#@#link[rel~=icon]
+google.com#@#link[rel~=icon]
+microsoft.com#@#link[rel~=icon]
+office.com#@#link[rel~=icon]
+outlook.com#@#link[rel~=icon]
+teams.microsoft.com#@#link[rel~=icon]
+slack.com#@#link[rel~=icon]
+zoom.us#@#link[rel~=icon]
+notion.so#@#link[rel~=icon]
+apple.com#@#link[rel~=icon]
+icloud.com#@#link[rel~=icon]
+dropbox.com#@#link[rel~=icon]
+docs.google.com#@#link[rel~=icon]
+drive.google.com#@#link[rel~=icon]
