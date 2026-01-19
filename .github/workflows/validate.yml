@@ -1,4 +1,4 @@
-name: Validate Filter Lists - Smart Final
+name: Validate Filter Lists
 
 on:
   push:
