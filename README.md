@@ -1,59 +1,69 @@
 # Security Filter Lists
-> Addressing edge-case abuse vectors often overlooked by mainstream filter lists.
+> Addressing niche but reproducible security abuse vectors often underrepresented in mainstream filter lists.
 
-This repository hosts a small collection of lists designed to mitigate **security edge cases** at the network and browser level.
-<br>The lists published here are **not general-purpose adblocking or privacy lists**, they intentionally target **well-defined security threats**, while prioritizing:
+This repository hosts a small set of filter lists targeting specific security abuse vectors at the network and browser level.
 
-- long-term stability
-- minimal false positives
-- no site breakage
+They are not intended for general-purpose adblocking or privacy use. The focus is on well-defined threats, with an emphasis on stability and avoiding site breakage.
+
+## Design principles
+
+**Security-first scope**  
+Only vectors with clear security implications are addressed.
+
+**Conservative filtering**  
+Rules are added only when reproducible and demonstrably safe.
+
+**Low churn**  
+Lists are designed to remain effective over time with minimal maintenance.
+
+**Explicit exceptions**  
+Allowlisting is used where required to avoid false positives.
+
+## Compatibility
+
+- Brave Shields and AdBlock Plus should use the **Standard** lists.
+- uBlock Origin and AdGuard should use their **engine-specific** variants.
+
+## What this repository does not aim to do
+
+- replace general-purpose adblocking or DNS filter lists
+- block generic analytics, advertising, or trackers
+- interfere with legitimate site functionality
+- apply speculative or aggressive filtering
 
 ---
 
-## Design principles
-These apply to all lists in this repository:
-
-  **Security-first scope**  
-  Only vectors with clear security or abuse implications are addressed.
-
-  **Conservative filtering**  
-  Rules are added only when they are demonstrably safe, reproducible, and do not cause documented site breakage.
-
-  **Low churn / long-term usability**  
-  Lists are designed to remain effective over time with minimal maintenance.
-
-  **Explicit exceptions**  
-  Verified brands, governments, and institutions are allowlisted where needed to avoid false positives.
-
 ## Available lists
+
 ### IDN Homograph & Favicon Security List
 
-Targets:
+This list is conceptually inspired by the work of [DandelionSprout](https://github.com/DandelionSprout), while being independently curated, structured, and maintained.
+
+**Targets**:
 
 - **[IDN / Punycode homograph attacks](https://en.wikipedia.org/wiki/IDN_homograph_attack)**  
-  Prevents phishing and impersonation using visually confusable domain names.
+  Mitigates phishing and impersonation via visually confusable internationalized domain names.
 
 - **Persistent [favicon-based tracking](https://www.ghacks.net/2021/01/22/favicons-may-be-used-to-track-users/)**  
-  Mitigates browser fingerprinting techniques abusing favicon cache behavior.
+  Reduces fingerprinting techniques abusing favicon cache persistence.
 
-  This list is a conceptual successor inspired by the work of [DandelionSprout](https://github.com/DandelionSprout), while being independently maintained and curated.
+>**URLs**
+>
+>- **Standard (Brave Shields / ABP):**
+>  https://tantalusdrive.github.io/Secfilters/Lists/Standard/IDNHomographFavicon.txt
+>
+>- **uBlock Origin:**  
+>  https://tantalusdrive.github.io/Secfilters/Lists/uBlock/IDNHomographFavicon.txt
+>
+>- **AdGuard:**  
+>  https://tantalusdrive.github.io/Secfilters/Lists/AdGuard/IDNHomographFavicon.txt
 
-**(Additional lists coming soon)**
-
-
-
-## What this repository does NOT aim to do
-
-- replace general-purpose adblocking lists or DNS filter lists
-- block generic analytics, beacons, or advertising
-- interfere with legitimate site functionality
-- aggressively block content without clear security relevance
-
-## Compatibility
-Each list can be used independently and is compatible with [uBlock Origin](https://ublockorigin.com/), [AdGuard](https://adguard.com/it/adguard-browser-extension/overview.html), [Brave Shields](https://brave.com/shields/) and [AdBlock Plus](https://adblockplus.org/).
+---
 
 ## Attribution & inspiration
-Some lists are conceptually inspired by existing community work. No content is copied, all lists are independently curated with distinct scope, structure, and maintenance philosophy.
+
+Some lists are conceptually inspired by existing community work. No content is copied; all lists are independently curated with a distinct scope and maintenance philosophy.
 
 ## License
-This repository and its contents are released under the Creative Commons Attribution‑NonCommercial‑ShareAlike 4.0 International ([CC BY‑NC‑SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)) license.
+
+This repository and its contents are released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0)).
