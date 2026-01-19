@@ -75,7 +75,14 @@ jobs:
             grep -F 'important' "$file"  && echo "WARNING: $file contains important"
             grep -F 'denyallow' "$file"  && echo "WARNING: $file contains denyallow"
             grep -F '||*' "$file"        && echo "WARNING: $file contains broad wildcard network filter"
-            grep -P '^/.+[^/](?<!\$document)(?<!\$frame)(?<!\$popup)(?<!\$important)[[:space:]]*$' "$file"  && echo "WARNING: Possible malformed regex in $file"
+            while IFS= read -r line; do
+              # ignora linee vuote e commenti
+              [[ -z "$line" || "$line" =~ ^! ]] && continue
+              cleaned=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//')
+              if [[ "$cleaned" =~ /[^/][[:space:]]*$ ]]; then
+                echo "WARNING: Possible malformed regex in $file -> $line"
+              fi
+            done < "$file"
 
           done < <(find Lists -type f -name "*.txt" -print0)
 
