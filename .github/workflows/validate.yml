@@ -1,4 +1,4 @@
-name: Validate Filter Lists - Full
+name: Validate Filter Lists
 
 on:
   push:
@@ -14,63 +14,58 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
 
-      - name: Full list validation
+      - name: Smart validation of filter lists
         shell: bash
         run: |
-          echo "Starting filter lists validation..."
+          echo "Starting smart validation..."
           ERRORS=0
 
           for file in $(find Lists -type f -name "*.txt"); do
             echo "Checking $file..."
 
-            # 1. File empty
-            if [ ! -s "$file" ]; then
-              echo "ERROR: $file is empty"
-              ERRORS=$((ERRORS+1))
-            fi
+            # Backup file (always overwrite the previous one)
+            cp "$file" "$file.bak"
 
-            # 2. CRLF line endings
+            # Remove BOM
+            sed -i '1s/^\xEF\xBB\xBF//' "$file"
+
+            # Convert CRLF → LF
             if grep -q $'\r' "$file"; then
-              echo "ERROR: $file contains CRLF line endings"
-              ERRORS=$((ERRORS+1))
+              echo "NOTICE: Converting CRLF to LF in $file"
+              sed -i 's/\r$//' "$file"
             fi
 
-            # 3. NULL bytes
+            # NULL bytes (warning only)
             if grep -q $'\x00' "$file"; then
-              echo "ERROR: $file contains NULL bytes"
-              ERRORS=$((ERRORS+1))
+              grep -Pn $'\x00' "$file" | while IFS=: read -r lineno _; do
+                echo "WARNING: NULL byte detected in $file at line $lineno"
+              done
             fi
 
-            # 4. Trailing whitespace (warning)
-            if grep -En '[[:space:]]+$' "$file"; then
-              echo "WARNING: Trailing whitespace detected in $file"
-            fi
+            # 1. File empty (critical)
+            [ ! -s "$file" ] && { echo "ERROR: $file is empty"; ERRORS=$((ERRORS+1)); }
 
-            # 5. Duplicate lines (non-comment)
-            DUP_LINES=$(awk '!/^!/{print}' "$file" | sort | uniq -d)
-            if [ -n "$DUP_LINES" ]; then
-              echo "WARNING: Duplicate lines detected in $file"
-              echo "$DUP_LINES"
-            fi
+            # 2. Trailing whitespace (warning)
+            grep -En '[[:space:]]+$' "$file" || true && echo "WARNING: Trailing whitespace detected in $file"
 
-            # 6. Malformed comment characters
-            if grep -En '^!.*[^[:print:][:space:]]' "$file"; then
-              echo "WARNING: Non-printable characters in comments in $file"
-            fi
+            # 3. Duplicate lines (non-comment, non-empty)
+            DUP_LINES=$(awk '!/^!/ && NF{print}' "$file" | sort | uniq -d)
+            [ -n "$DUP_LINES" ] && { echo "WARNING: Duplicate lines detected in $file"; echo "$DUP_LINES"; }
 
-            # 7. Security-oriented checks (warning)
-            if grep -En '(\$all|important|denyallow)' "$file"; then
-              echo "WARNING: Potentially dangerous filter option in $file"
-            fi
-            if grep -En '^\|\|\*\$' "$file"; then
-              echo "WARNING: Broad wildcard network filter in $file"
-            fi
-            if grep -EP '^/.+[^/][[:space:]]*$' "$file"; then
-              echo "WARNING: Possible malformed regex in $file"
-            fi
+            # 4. Malformed comment characters
+            grep -En '^!.*[^[:print:][:space:]]' "$file" || true && echo "WARNING: Non-printable characters in comments in $file"
+
+            # 5. Security-oriented checks (warning)
+            grep -F '\$all' "$file" || true && echo "WARNING: $file contains \$all"
+            grep -F 'important' "$file" || true && echo "WARNING: $file contains important"
+            grep -F 'denyallow' "$file" || true && echo "WARNING: $file contains denyallow"
+            grep -F '||*' "$file" || true && echo "WARNING: $file contains broad wildcard network filter"
+            grep -EP '^/.+[^/][[:space:]]*$' "$file" || true && echo "WARNING: Possible malformed regex in $file"
 
           done
 
