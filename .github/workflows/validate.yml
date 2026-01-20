@@ -48,8 +48,6 @@ jobs:
               [[ -z "$line" || "$line" =~ ^! ]] && continue
 
               [[ "$line" =~ [[:space:]]+$ ]] && echo "WARNING: Trailing whitespace in $file -> $line"
-
-              # suppress $all and $important for expected usage
               [[ "$line" =~ denyallow ]]  && echo "WARNING: $file contains denyallow -> $line"
               [[ "$line" =~ \|\|\* ]]     && echo "WARNING: $file contains broad wildcard network filter -> $line"
 
@@ -58,25 +56,20 @@ jobs:
               [[ "$cleaned" =~ \|\|.+\|\| ]] && echo "WARNING: Multiple pipe detected in $file -> $line"
               [[ "$cleaned" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: Possible malformed regex in $file -> $line"
 
-              # JS/CSS filter check with false-positive suppression
+              skip_line=false
               if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
                 dom=$(echo "$line" | LC_ALL=C grep -Po 'domain=/\K[^/]+(?=/)' 2>/dev/null || true)
-
-                # skip known safe domains
-                if [[ -n "$dom" ]]; then
-                  if [[ "$dom" == xn--* || "$dom" == *favicon* ]]; then
-                    continue
-                  fi
+                if [[ -n "$dom" && ( "$dom" == xn--* || "$dom" == *favicon* ) ]]; then
+                  skip_line=true
                 fi
-
-                # skip complex JS filters or known suffix flags
-                if echo "$line" | grep -qE '\(.*,.*,.+'; then continue; fi
-                if echo "$line" | grep -qE '\$document|\$frame|\$popup|\$important'; then continue; fi
-
-                tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
-                [[ "$tmp" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
+                if echo "$line" | grep -qE '\(.*,.*,.+'; then skip_line=true; fi
+                if echo "$line" | grep -qE '\$document|\$frame|\$popup|\$important'; then skip_line=true; fi
               fi
-              # END updated JS/CSS filter check
+
+              $skip_line && continue
+
+              tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
+              [[ "$tmp" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
 
             done < "$file"
 
