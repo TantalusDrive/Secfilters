@@ -12,9 +12,9 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-||xn--$document
-||xn--$frame
-||xn--$subdocument
+||xn--^$document
+||xn--^$frame
+||xn--^$subdocument
 
 ! Block favicon image loads on Punycode domains
 ||xn--^/*.ico$image
