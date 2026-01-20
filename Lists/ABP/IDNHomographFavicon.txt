@@ -1,10 +1,10 @@
-! Title: IDN Homograph / Favicon Security List
+! Title: IDN Homograph / Favicon Security List - ABP version (MV2)
 ! Version: v1.0.1
 ! Last updated: 2026-01-20
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
-! Compatible: ABP, Brave Shields
+! Compatible: AdBlock Plus
 ! Author: TantalusDrive
 ! Repository: https://github.com/TantalusDrive/Secfilters
 ! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
@@ -12,12 +12,11 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-||xn--$document
-||xn--$subdocument
+||xn--^$document
+||xn--^$subdocument
 
 ! Block favicon image loads on Punycode domains
-||xn--^/*.ico$image
-||xn--^/*.png$image
+||xn--^$image
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
