@@ -25,7 +25,6 @@ jobs:
           echo "Starting optimized smart validation..."
           ERRORS=0
 
-          # iterate safely over filenames (handles spaces/newlines)
           while IFS= read -r -d '' file; do
             echo "Checking $file..."
             cp "$file" "$file.bak"
@@ -65,16 +64,15 @@ jobs:
 
                 # skip known safe domains
                 if [[ -n "$dom" ]]; then
-                  case "$dom" in
-                    xn--*|*favicon*|*.*|*-*) continue ;;
-                  esac
+                  if [[ "$dom" == xn--* || "$dom" == *favicon* ]]; then
+                    continue
+                  fi
                 fi
 
                 # skip complex JS filters or known suffix flags
                 if echo "$line" | grep -qE '\(.*,.*,.+'; then continue; fi
                 if echo "$line" | grep -qE '\$document|\$frame|\$popup|\$important'; then continue; fi
 
-                # check remaining lines for possible trailing-space regex issues
                 tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
                 [[ "$tmp" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
               fi
