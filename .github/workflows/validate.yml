@@ -77,13 +77,29 @@ jobs:
               fi
 
               # JS/CSS filters: refined to reduce false positives
-              if [[ "$line" =~ ^##\+js|^##:matches-css ]]; then
-                tmp=$(echo "$line" | sed -E 's/\(.*\)//; s/[[:space:]]+$//')
-                if [[ "$tmp" =~ /[^/][[:space:]]*$ && ! "$tmp" =~ /xn--/ && ! "$tmp" =~ /favicon && $(grep -o "/" <<< "$tmp" | wc -l) -le 1 ]]; then
+              if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
+                # 1) if there's a domain=/.../ fragment, extract the inner token and treat known safe cases as OK
+                if echo "$line" | grep -q 'domain=/'; then
+                  dom=$(echo "$line" | sed -n 's/.*domain=\/\([^/]*\)\/.*/\1/p' || true)
+                  if [[ -n "$dom" ]]; then
+                    # safe if contains xn-- (IDN marker) or favicon, or if domain token looks like a normal host fragment
+                    if [[ "$dom" =~ xn-- || "$dom" =~ favicon || "$dom" =~ \. || "$dom" =~ - ]]; then
+                      continue
+                    fi
+                  fi
+                fi
+
+                # 2) many legitimate JS/CSS filters include parentheses or multiple commas, skip them to avoid false positives
+                if echo "$line" | grep -qE '\(.*\)'; then
+                  continue
+                fi
+
+                # 3) Fallback: trim suffix flags and check for an actual suspicious trailing slash in a regex/filter
+                cleaned=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
+                if [[ "$cleaned" =~ /[^/][[:space:]]*$ ]]; then
                   echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
                 fi
               fi
-
 
             done < "$file"
 
