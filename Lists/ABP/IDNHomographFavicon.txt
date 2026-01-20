@@ -1,5 +1,5 @@
 ! Title: IDN Homograph / Favicon Security List
-! Version: v1.0.0
+! Version: v1.0.1
 ! Last updated: 2026-01-20
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
 ! without breaking site functionality.
