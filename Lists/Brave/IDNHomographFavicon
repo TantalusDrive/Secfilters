@@ -1,0 +1,246 @@
+! Title: IDN Homograph / Favicon Security List - Brave version
+! Version: v1.0.1
+! Last updated: 2026-01-20
+! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
+! without breaking site functionality.
+! Scope: Security filters only, not general ad/tracker blocking.
+! Compatible: Brave Shields
+! Author: TantalusDrive
+! Repository: https://github.com/TantalusDrive/Secfilters
+! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
+! Notes: Includes verified exceptions for major brands/institutions to minimize false positives.
+
+
+! --- IDN / Punycode homograph attacks ---
+||xn--$document
+||xn--$frame
+||xn--$subdocument
+
+! Block favicon image loads on Punycode domains
+||xn--^/*.ico$image
+||xn--^/*.png$image
+
+! Exceptions: verified global domains (brands, institutions, govs, etc.)
+@@||xn--fsq.com^
+@@||xn--wgv71a.com^
+@@||xn--fiqs8s.com^
+@@||xn--xq7j.com^
+@@||xn--mgbaam7a8h.com^
+@@||xn--mgberp4a.com^
+@@||xn--caf-dma.com^
+@@||xn--banco-bb.com^
+@@||xn--mdo-bga.com^
+@@||xn--apple-43a.com^
+@@||xn--google-qc0b.com^
+@@||xn--microsoft-8q0b.com^
+@@||xn--amazon-3ra.com^
+@@||xn--wikipedia-7qa.org^
+@@||xn--mozilla-8qa.org^
+@@||xn--intel-43a.com^
+@@||xn--coca-44d.com^
+@@||xn--nike-43a.com^
+@@||xn--adidas-43a.com^
+@@||xn--facebook-43a.com^
+@@||xn--twitter-43a.com^
+@@||xn--youtube-43a.com^
+@@||xn--reddit-43a.com^
+@@||xn--linkedin-43a.com^
+@@||xn--ibm-43a.com^
+@@||xn--oracle-43a.com^
+@@||xn--paypal-43a.com^
+@@||xn--visa-43a.com^
+@@||xn--mastercard-43a.com^
+@@||xn--un-43a.org^
+@@||xn--eu-43a.eu^
+@@||xn--who-43a.int^
+@@||xn--nasa-43a.gov^
+@@||xn--cia-43a.gov^
+@@||xn--fbi-43a.gov^
+@@||xn--unicef-43a.org^
+@@||xn--unesco-43a.org^
+@@||xn--imf-43a.int^
+@@||xn--oecd-43a.org^
+! Amazon.cn (亚马逊 TLD)
+@@||xn--mgba3a3ejt^
+! Amazon Katakana TLD
+@@||xn--cckwcxetd^
+! Etisalat/اتصالات
+@@||xn--mgbaakc7dvf^
+! China United Network Communications (联通)
+@@||xn--8y0a063a^
+! China Mobile (移动)
+@@||xn--6frz82g^
+! CITIC Group (.中信)
+@@||xn--fiq64b^
+! .рф (Russian IDN ccTLD)
+@@||xn--p1ai^
+! .укр (Ukrainian IDN ccTLD)
+@@||xn--j1amh^
+! .亚马逊 (Amazon – cinese)
+@@||xn--jlq480n2rg^
+! .淡马锡 (Temasek – cinese)
+@@||xn--b4w605ferd^
+! .香格里拉 (Shangri‑La – cinese)
+@@||xn--5su34j936bgsg^
+! .中国 (Cina) – Punycode per .中国
+@@||xn--fiqz9s^
+@@||xn--fiqz9s^
+@@||xn--90ae^
+@@||xn--mgberp4a5d4ar^
+@@||xn--wgbh1c^
+@@||xn--j6w193g^
+@@||xn--kpry57d^
+
+! Favicons tracking - targeted & safe
+! Social networks
+||reddit.com/*.ico$image
+||reddit.com/*.png$image
+||reddit.com/favicon.ico$image
+||reddit.com/apple-touch-icon$image
+||instagram.com/*.ico$image
+||instagram.com/*.png$image
+||instagram.com/favicon.ico$image
+||cdninstagram.com/*.ico$image
+||cdninstagram.com/*.png$image
+||facebook.com/*.ico$image
+||facebook.com/*.png$image
+||facebook.com/favicon.ico$image
+||fbcdn.net/*.ico$image
+||fbcdn.net/*.png$image
+||twitter.com/*.ico$image
+||twitter.com/*.png$image
+||twitter.com/favicon.ico$image
+||tiktok.com/*.ico$image
+||tiktok.com/favicon.ico$image
+||tiktokcdn.com/*.ico$image
+||youtube.com/*.ico$image
+||youtube.com/favicon.ico$image
+||medium.com/favicon.ico$image
+||pinterest.com/favicon.ico$image
+||snapchat.com/favicon.ico$image
+||discord.com/favicon.ico$image
+||messenger.com/favicon.ico$image
+||whatsapp.com/favicon.ico$image
+||telegram.org/favicon.ico$image
+||weibo.com/favicon.ico$image
+||vk.com/favicon.ico$image
+||line.me/favicon.ico$image
+||kakao.com/favicon.ico$image
+||threads.net/favicon.ico$image
+
+! News / media
+||nytimes.com/favicon.ico$image
+||washingtonpost.com/favicon.ico$image
+||bbc.com/favicon.ico$image
+||cnn.com/favicon.ico$image
+||reuters.com/favicon.ico$image
+||theguardian.com/favicon.ico$image
+||forbes.com/favicon.ico$image
+||bloomberg.com/favicon.ico$image
+||wired.com/favicon.ico$image
+||techcrunch.com/favicon.ico$image
+||huffpost.com/favicon.ico$image
+||mashable.com/favicon.ico$image
+||vice.com/favicon.ico$image
+||cnbc.com/favicon.ico$image
+||aljazeera.com/favicon.ico$image
+||ft.com/favicon.ico$image
+||economist.com/favicon.ico$image
+||lemonde.fr/favicon.ico$image
+||spiegel.de/favicon.ico$image
+||elpais.com/favicon.ico$image
+||asia.nikkei.com/favicon.ico$image
+||smh.com.au/favicon.ico$image
+||cbc.ca/favicon.ico$image
+
+! E-commerce / retail
+||amazon.com/*.ico$image
+||amazon.com/*.png$image
+||ebay.com/*.ico$image
+||ebay.com/*.png$image
+||walmart.com/*.ico$image
+||walmart.com/*.png$image
+||bestbuy.com/*.ico$image
+||bestbuy.com/*.png$image
+||nike.com/*.ico$image
+||nike.com/*.png$image
+||adidas.com/*.ico$image
+||adidas.com/*.png$image
+||steamdb.info/*.ico$image
+||shopdisney.com/*.ico$image
+||aliexpress.com/*.ico$image
+||etsy.com/*.ico$image
+||target.com/*.ico$image
+||costco.com/*.ico$image
+||newegg.com/*.ico$image
+||gamestop.com/*.ico$image
+||micromania.fr/*.ico$image
+||hm.com/*.ico$image
+||zara.com/*.ico$image
+||uniqlo.com/*.ico$image
+||lazada.com/*.ico$image
+||rakuten.com/*.ico$image
+||flipkart.com/*.ico$image
+
+! Gaming / streaming / entertainment
+||steamcommunity.com/*.ico$image
+||playstation.com/*.ico$image
+||xbox.com/*.ico$image
+||epicgames.com/*.ico$image
+||twitch.tv/*.ico$image
+||netflix.com/*.ico$image
+||hulu.com/*.ico$image
+||disneyplus.com/*.ico$image
+||spotify.com/*.ico$image
+||soundcloud.com/*.ico$image
+||roblox.com/*.ico$image
+||minecraft.net/*.ico$image
+||primevideo.com/*.ico$image
+||hbo.com/*.ico$image
+||crunchyroll.com/*.ico$image
+||funimation.com/*.ico$image
+||funimation.com/*.png$image
+
+! Productivity / cloud / collaboration
+||google.com/*.ico$image
+||docs.google.com/*.ico$image
+||drive.google.com/*.ico$image
+||onedrive.live.com/*.ico$image
+||zoom.us/*.ico$image
+||bitbucket.org/*.ico$image
+||trello.com/*.ico$image
+||asana.com/*.ico$image
+||microsoft.com/*.ico$image
+||apple.com/*.ico$image
+||adobe.com/*.ico$image
+||salesforce.com/*.ico$image
+||zoho.com/*.ico$image
+||confluence.atlassian.com/*.ico$image
+||hubspot.com/*.ico$image
+||icloud.com/*.ico$image
+
+! Exceptions - critical logins / breakage-prone
+wikipedia.org#@#
+mozilla.org#@#
+brave.com#@#
+github.com#@#
+stackoverflow.com#@#
+linkedin.com#@#
+gmail.com#@#
+office.com#@#
+outlook.com#@#
+teams.microsoft.com#@#
+slack.com#@#
+notion.so#@#
+dropbox.com#@#
+signal.org#@#
+mastodon.social#@#
+duckduckgo.com#@#
+nextcloud.com#@#
+matrix.org#@#
+app.element.io#@#
+atlassian.com#@#
+jira.atlassian.com#@#
+figma.com#@#
+gitlab.com#@#
+proton.me#@#
