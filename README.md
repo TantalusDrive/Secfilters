@@ -56,7 +56,7 @@ This list is conceptually inspired by the work of [DandelionSprout](https://gith
 >
 >- **AdGuard:** https://tantalusdrive.github.io/Secfilters/Lists/AdGuard/IDNHomographFavicon.txt
 >
-> Raw GitHub URLs are available only as fallback, but we recommend using the GitHub Pages endpoints for reliability and HTTPS support.
+> Raw GitHub URLs are available only as fallback.
 
 ---
 
