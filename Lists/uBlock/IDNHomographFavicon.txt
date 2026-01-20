@@ -78,7 +78,6 @@
 @@||xn--5su34j936bgsg^
 ! .中国 (Cina) – Punycode per .中国
 @@||xn--fiqz9s^
-@@||xn--fiqz9s^
 @@||xn--90ae^
 @@||xn--mgberp4a5d4ar^
 @@||xn--wgbh1c^
