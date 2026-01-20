@@ -28,85 +28,70 @@ jobs:
           # iterate safely over filenames (handles spaces/newlines)
           while IFS= read -r -d '' file; do
             echo "Checking $file..."
-            # backup (overwrite previous .bak)
             cp "$file" "$file.bak"
 
-            # Remove BOM (avoid false NULL detection)
             sed -i '1s/^\xEF\xBB\xBF//' "$file"
 
-            # Convert CRLF → LF (note: this modifies files in runner workspace)
             if grep -q $'\r' "$file"; then
               echo "NOTICE: Converting CRLF to LF in $file"
               sed -i 's/\r$//' "$file"
             fi
 
-            # NULL bytes: detect + log
             if LC_ALL=C grep -Pq '\x00' "$file" 2>/dev/null; then
               LC_ALL=C grep -Pn '\x00' "$file" 2>/dev/null | while IFS=: read -r lineno _; do
                 echo "WARNING: NULL byte found in $file at line $lineno"
               done
             fi
 
-            # File empty
             [ ! -s "$file" ] && { echo "ERROR: $file is empty"; ERRORS=$((ERRORS+1)); }
 
-            # Line-by-line checks
             while IFS= read -r line || [ -n "$line" ]; do
               [[ -z "$line" || "$line" =~ ^! ]] && continue
 
-              # Trailing whitespace
               [[ "$line" =~ [[:space:]]+$ ]] && echo "WARNING: Trailing whitespace in $file -> $line"
 
-              # Security flags / broad filters
               [[ "$line" =~ \$all ]]      && echo "WARNING: $file contains \$all -> $line"
               [[ "$line" =~ important ]]  && echo "WARNING: $file contains important -> $line"
               [[ "$line" =~ denyallow ]]  && echo "WARNING: $file contains denyallow -> $line"
               [[ "$line" =~ \|\|\* ]]     && echo "WARNING: $file contains broad wildcard network filter -> $line"
 
-              # Normalize: strip common suffix flags before regex checks
               cleaned=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//')
 
-              # Multiple/misplaced pipes
               if [[ "$cleaned" =~ \|\|.+\|\| ]]; then
                 echo "WARNING: Multiple pipe detected in $file -> $line"
               fi
 
-              # Malformed regex: ends with non-terminating slash or trailing whitespace after slash
               if [[ "$cleaned" =~ /[^/][[:space:]]*$ ]]; then
                 echo "WARNING: Possible malformed regex in $file -> $line"
               fi
 
-             # JS/CSS filters: refined to reduce false positives
-             if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
-               # try to extract domain token robustly using PCRE (grep -Po)
-               dom=$(echo "$line" | LC_ALL=C grep -Po 'domain=/\K[^/]+(?=/)' 2>/dev/null || true)
+              # --- Updated JS/CSS filter check ---
+              if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
+                dom=$(echo "$line" | LC_ALL=C grep -Po 'domain=/\K[^/]+(?=/)' 2>/dev/null || true)
 
-               # if we found a domain token, treat common safe cases as OK
-               if [[ -n "$dom" ]]; then
-                 if [[ "$dom" =~ xn-- || "$dom" =~ favicon || "$dom" =~ \. || "$dom" =~ - ]]; then
-                   # domain token looks like a normal/IDN/favicon fragment → skip
-                   continue
-                 fi
-               fi
+                if [[ -n "$dom" ]]; then
+                  case "$dom" in
+                    xn--*|*favicon*|*.*|*-*) continue ;;  # safe IDN, favicon, normal fragment
+                  esac
+                fi
 
-               # If line contains parentheses with many comma-separated args, assume it's a complex JS filter and skip
-               # (covers patterns like ##+js(aopr, HTMLLinkElement.prototype.rel, , , domain=/xn--/))
-               if echo "$line" | grep -qE '\(.*,.*,.+'; then
-                 continue
-               fi
+                if echo "$line" | grep -qE '\(.*,.*,.+'; then
+                  continue  # complex JS filter, skip
+                fi
 
-               # Normalize: strip common suffix flags and trailing whitespace
-               tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
+                if echo "$line" | grep -qE '\$document|\$frame|\$popup|\$important'; then
+                  continue  # known suffix flags
+                fi
 
-               # Final fallback: suspicious trailing slash outside a domain token -> warn
-               if [[ "$tmp" =~ /[^/][[:space:]]*$ ]]; then
-                 echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
-               fi
-             fi
+                tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
+                if [[ "$tmp" =~ /[^/][[:space:]]*$ ]]; then
+                  echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
+                fi
+              fi
+              # --- End updated JS/CSS filter check ---
 
             done < "$file"
 
-            # Duplicate lines (non-comment, non-empty)
             DUP_LINES=$(awk '!/^!/ && NF{print}' "$file" | sort | uniq -d)
             [ -n "$DUP_LINES" ] && { echo "WARNING: Duplicate lines in $file"; echo "$DUP_LINES"; }
 
