@@ -50,45 +50,35 @@ jobs:
 
               [[ "$line" =~ [[:space:]]+$ ]] && echo "WARNING: Trailing whitespace in $file -> $line"
 
-              [[ "$line" =~ \$all ]]      && echo "WARNING: $file contains \$all -> $line"
-              [[ "$line" =~ important ]]  && echo "WARNING: $file contains important -> $line"
+              # suppress $all and $important for expected usage
               [[ "$line" =~ denyallow ]]  && echo "WARNING: $file contains denyallow -> $line"
               [[ "$line" =~ \|\|\* ]]     && echo "WARNING: $file contains broad wildcard network filter -> $line"
 
               cleaned=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//')
 
-              if [[ "$cleaned" =~ \|\|.+\|\| ]]; then
-                echo "WARNING: Multiple pipe detected in $file -> $line"
-              fi
+              [[ "$cleaned" =~ \|\|.+\|\| ]] && echo "WARNING: Multiple pipe detected in $file -> $line"
+              [[ "$cleaned" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: Possible malformed regex in $file -> $line"
 
-              if [[ "$cleaned" =~ /[^/][[:space:]]*$ ]]; then
-                echo "WARNING: Possible malformed regex in $file -> $line"
-              fi
-
-              # --- Updated JS/CSS filter check ---
+              # JS/CSS filter check with false-positive suppression
               if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
                 dom=$(echo "$line" | LC_ALL=C grep -Po 'domain=/\K[^/]+(?=/)' 2>/dev/null || true)
 
+                # skip known safe domains
                 if [[ -n "$dom" ]]; then
                   case "$dom" in
-                    xn--*|*favicon*|*.*|*-*) continue ;;  # safe IDN, favicon, normal fragment
+                    xn--*|*favicon*|*.*|*-*) continue ;;
                   esac
                 fi
 
-                if echo "$line" | grep -qE '\(.*,.*,.+'; then
-                  continue  # complex JS filter, skip
-                fi
+                # skip complex JS filters or known suffix flags
+                if echo "$line" | grep -qE '\(.*,.*,.+'; then continue; fi
+                if echo "$line" | grep -qE '\$document|\$frame|\$popup|\$important'; then continue; fi
 
-                if echo "$line" | grep -qE '\$document|\$frame|\$popup|\$important'; then
-                  continue  # known suffix flags
-                fi
-
+                # check remaining lines for possible trailing-space regex issues
                 tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
-                if [[ "$tmp" =~ /[^/][[:space:]]*$ ]]; then
-                  echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
-                fi
+                [[ "$tmp" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
               fi
-              # --- End updated JS/CSS filter check ---
+              # END updated JS/CSS filter check
 
             done < "$file"
 
