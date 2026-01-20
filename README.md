@@ -21,8 +21,7 @@ Major brands, governments, and institutions are deliberately allowlisted to prev
 
 ## Compatibility
 
-- Brave Shields and AdBlock Plus should use the **Standard** lists.  
-- uBlock Origin and AdGuard should use their **engine-specific** variants.  
+- Every adblocker (ABP, AdGuard, Brave Shields, uBlock Origin) should use their **engine-specific** variant.  
 - Each list is intended to work independently; you should subscribe only to the lists relevant to your setup.
 
 ## What this repository does not aim to do
@@ -49,8 +48,9 @@ This list is conceptually inspired by the work of [DandelionSprout](https://gith
   Reduces fingerprinting techniques exploiting favicon cache persistence.  
 
 >**Subscription URLs**
+>- **ABP:** https://tantalusdrive.github.io/Secfilters/Lists/ABP/IDNHomographFavicon.txt
 >
->- **Standard (Brave Shields / ABP):** https://tantalusdrive.github.io/Secfilters/Lists/Standard/IDNHomographFavicon.txt
+>- **Brave Shields:** https://tantalusdrive.github.io/Secfilters/Lists/Brave/IDNHomographFavicon.txt
 >
 >- **uBlock Origin:** https://tantalusdrive.github.io/Secfilters/Lists/uBlock/IDNHomographFavicon.txt
 >
