@@ -76,13 +76,14 @@ jobs:
                 echo "WARNING: Possible malformed regex in $file -> $line"
               fi
 
-              # JS/CSS filters
+              # JS/CSS filters: refined to reduce false positives
               if [[ "$line" =~ ^##\+js|^##:matches-css ]]; then
                 tmp=$(echo "$line" | sed -E 's/\(.*\)//; s/[[:space:]]+$//')
-                if [[ "$tmp" =~ /[^/][[:space:]]*$ && ! "$tmp" =~ /xn--/ && ! "$tmp" =~ /favicon ]]; then
+                if [[ "$tmp" =~ /[^/][[:space:]]*$ && ! "$tmp" =~ /xn--/ && ! "$tmp" =~ /favicon && $(grep -o "/" <<< "$tmp" | wc -l) -le 1 ]]; then
                   echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
                 fi
               fi
+
 
             done < "$file"
 
