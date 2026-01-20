@@ -15,74 +15,79 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 1
 
       - name: Smart validation of filter lists
         shell: bash
         run: |
-          echo "Starting smart validation..."
+          echo "Starting optimized smart validation..."
           ERRORS=0
 
+          # iterate safely over filenames (handles spaces/newlines)
           while IFS= read -r -d '' file; do
             echo "Checking $file..."
-
+            # backup (overwrite previous .bak)
             cp "$file" "$file.bak"
 
-            # Remove BOM
+            # Remove BOM (avoid false NULL detection)
             sed -i '1s/^\xEF\xBB\xBF//' "$file"
 
-            # Convert CRLF → LF
+            # Convert CRLF → LF (note: this modifies files in runner workspace)
             if grep -q $'\r' "$file"; then
               echo "NOTICE: Converting CRLF to LF in $file"
               sed -i 's/\r$//' "$file"
             fi
 
-            # NULL bytes (detect + remove correctly)
-            if LC_ALL=C grep -Pq '\x00' "$file"; then
-              LC_ALL=C grep -Pn '\x00' "$file" | while IFS=: read -r lineno _; do
-                echo "NOTICE: Removing NULL byte in $file at line $lineno"
+            # NULL bytes: detect + log
+            if LC_ALL=C grep -Pq '\x00' "$file" 2>/dev/null; then
+              LC_ALL=C grep -Pn '\x00' "$file" 2>/dev/null | while IFS=: read -r lineno _; do
+                echo "WARNING: NULL byte found in $file at line $lineno"
               done
-              tr -d '\000' < "$file" > "$file.tmp" && mv "$file.tmp" "$file"
             fi
 
-            # 1. File empty (critical)
-            if [ ! -s "$file" ]; then
-              echo "ERROR: $file is empty"
-              ERRORS=$((ERRORS+1))
-            fi
+            # File empty
+            [ ! -s "$file" ] && { echo "ERROR: $file is empty"; ERRORS=$((ERRORS+1)); }
 
-            # 2. Trailing whitespace (warning)
-            if grep -En '[[:space:]]+$' "$file"; then
-              echo "WARNING: Trailing whitespace detected in $file"
-            fi
-
-            # 3. Duplicate lines (non-comment, non-empty)
-            DUP_LINES=$(awk '!/^!/ && NF{print}' "$file" | sort | uniq -d)
-            if [ -n "$DUP_LINES" ]; then
-              echo "WARNING: Duplicate lines detected in $file"
-              echo "$DUP_LINES"
-            fi
-
-            # 4. Malformed comment characters
-            if grep -En '^!.*[^[:print:][:space:]]' "$file"; then
-              echo "WARNING: Non-printable characters in comments in $file"
-            fi
-
-            # 5. Security-oriented checks (warning)
-            grep -F '\$all' "$file"       && echo "WARNING: $file contains \$all"
-            grep -F 'important' "$file"  && echo "WARNING: $file contains important"
-            grep -F 'denyallow' "$file"  && echo "WARNING: $file contains denyallow"
-            grep -F '||*' "$file"        && echo "WARNING: $file contains broad wildcard network filter"
-            while IFS= read -r line; do
-              # ignora linee vuote e commenti
+            # Line-by-line checks
+            while IFS= read -r line || [ -n "$line" ]; do
               [[ -z "$line" || "$line" =~ ^! ]] && continue
+
+              # Trailing whitespace
+              [[ "$line" =~ [[:space:]]+$ ]] && echo "WARNING: Trailing whitespace in $file -> $line"
+
+              # Security flags / broad filters
+              [[ "$line" =~ \$all ]]      && echo "WARNING: $file contains \$all -> $line"
+              [[ "$line" =~ important ]]  && echo "WARNING: $file contains important -> $line"
+              [[ "$line" =~ denyallow ]]  && echo "WARNING: $file contains denyallow -> $line"
+              [[ "$line" =~ \|\|\* ]]     && echo "WARNING: $file contains broad wildcard network filter -> $line"
+
+              # Normalize: strip common suffix flags before regex checks
               cleaned=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//')
+
+              # Multiple/misplaced pipes
+              if [[ "$cleaned" =~ \|\|.+\|\| ]]; then
+                echo "WARNING: Multiple pipe detected in $file -> $line"
+              fi
+
+              # Malformed regex: ends with non-terminating slash or trailing whitespace after slash
               if [[ "$cleaned" =~ /[^/][[:space:]]*$ ]]; then
                 echo "WARNING: Possible malformed regex in $file -> $line"
               fi
+
+              # JS/CSS filters: basic domain fragment check (heuristic)
+              if [[ "$line" =~ ^##\+js|^##:matches-css ]]; then
+                if [[ "$line" =~ domain=/[^/]*$ ]]; then
+                  echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
+                fi
+              fi
+
             done < "$file"
+
+            # Duplicate lines (non-comment, non-empty)
+            DUP_LINES=$(awk '!/^!/ && NF{print}' "$file" | sort | uniq -d)
+            [ -n "$DUP_LINES" ] && { echo "WARNING: Duplicate lines in $file"; echo "$DUP_LINES"; }
 
           done < <(find Lists -type f -name "*.txt" -print0)
 
