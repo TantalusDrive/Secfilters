@@ -78,12 +78,27 @@ jobs:
 
              # JS/CSS filters: refined to reduce false positives
              if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
-               # Estrai il token domain=/…/ se presente
-               dom=$(echo "$line" | sed -n 's/.*domain=\/\([^/]*\)\/.*/\1/p' || true)
-               if [[ -n "$dom" && ( "$dom" =~ xn-- || "$dom" =~ favicon || "$dom" =~ \. || "$dom" =~ - ) ]]; then
+               # try to extract domain token robustly using PCRE (grep -Po)
+               dom=$(echo "$line" | LC_ALL=C grep -Po 'domain=/\K[^/]+(?=/)' 2>/dev/null || true)
+
+               # if we found a domain token, treat common safe cases as OK
+               if [[ -n "$dom" ]]; then
+                 if [[ "$dom" =~ xn-- || "$dom" =~ favicon || "$dom" =~ \. || "$dom" =~ - ]]; then
+                   # domain token looks like a normal/IDN/favicon fragment → skip
+                   continue
+                 fi
+               fi
+
+               # If line contains parentheses with many comma-separated args, assume it's a complex JS filter and skip
+               # (covers patterns like ##+js(aopr, HTMLLinkElement.prototype.rel, , , domain=/xn--/))
+               if echo "$line" | grep -qE '\(.*,.*,.+'; then
                  continue
                fi
+
+               # Normalize: strip common suffix flags and trailing whitespace
                tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
+
+               # Final fallback: suspicious trailing slash outside a domain token -> warn
                if [[ "$tmp" =~ /[^/][[:space:]]*$ ]]; then
                  echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
                fi
