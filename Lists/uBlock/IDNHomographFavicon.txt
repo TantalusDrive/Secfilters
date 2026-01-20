@@ -12,7 +12,7 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,24}(/|$)/$document,frame,popup,important
+/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(/|$)/$document,frame,popup,important
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
