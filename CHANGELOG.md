@@ -20,11 +20,12 @@ Updates will only be recorded when:
   - Expanded whitelist for IDN domains and favicons to reduce false positives.
   - GitHub Pages site as the official distribution channel.
   - Workflow-based validation for list syntax and rule consistency.
-- Changed:
+- Changes:
   - Refined filtering rules to improve reliability and compatibility.
   - Corrected minor syntax errors across lists.
   - Updated README.md, CONTRIBUTING.md, CHANGELOG.md and metadata.json .
-- Fixed:
+  - Divided Standard list into engine-specific lists for ABP and Brave Shields.
+- Fixes:
   - Minor breakage issues with secondary site features caused by over-blocking.
 
 ---
