@@ -66,4 +66,5 @@ Some lists are conceptually inspired by community work. No content is copied; al
 
 ## License
 
+![CC BY-NC-SA 4.0](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)  
 This repository and its contents are released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0)).
