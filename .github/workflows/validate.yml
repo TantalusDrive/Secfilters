@@ -56,17 +56,14 @@ jobs:
               [[ "$cleaned" =~ \|\|.+\|\| ]] && echo "WARNING: Multiple pipe detected in $file -> $line"
               [[ "$cleaned" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: Possible malformed regex in $file -> $line"
 
-              skip_line=false
               if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
-                dom=$(echo "$line" | LC_ALL=C grep -Po 'domain=/\K[^/]+(?=/)' 2>/dev/null || true)
-                if [[ -n "$dom" && ( "$dom" == xn--* || "$dom" == *favicon* ) ]]; then
-                  skip_line=true
+                # salta linee note sicure contenenti xn-- o favicon
+                if [[ "$line" == *xn--* || "$line" == *favicon* ]]; then
+                  continue
                 fi
-                if echo "$line" | grep -qE '\(.*,.*,.+'; then skip_line=true; fi
-                if echo "$line" | grep -qE '\$document|\$frame|\$popup|\$important'; then skip_line=true; fi
+                if [[ "$line" =~ \(.*,.*,.+ ]]; then continue; fi
+                if [[ "$line" =~ \$document|\$frame|\$popup|\$important ]]; then continue; fi
               fi
-
-              $skip_line && continue
 
               tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
               [[ "$tmp" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
