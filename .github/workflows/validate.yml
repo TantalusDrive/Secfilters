@@ -28,7 +28,6 @@ jobs:
           while IFS= read -r -d '' file; do
             echo "Checking $file..."
             cp "$file" "$file.bak"
-
             sed -i '1s/^\xEF\xBB\xBF//' "$file"
 
             if grep -q $'\r' "$file"; then
@@ -54,19 +53,16 @@ jobs:
               cleaned=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//')
 
               [[ "$cleaned" =~ \|\|.+\|\| ]] && echo "WARNING: Multiple pipe detected in $file -> $line"
-              [[ "$cleaned" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: Possible malformed regex in $file -> $line"
 
+              skip=false
               if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
-                # salta linee note sicure contenenti xn-- o favicon
-                if [[ "$line" == *xn--* || "$line" == *favicon* ]]; then
-                  continue
-                fi
-                if [[ "$line" =~ \(.*,.*,.+ ]]; then continue; fi
-                if [[ "$line" =~ \$document|\$frame|\$popup|\$important ]]; then continue; fi
+                if [[ "$line" == *xn--* || "$line" == *favicon* ]]; then skip=true; fi
+                if [[ "$line" =~ \(.*,.*,.+ ]]; then skip=true; fi
+                if [[ "$line" =~ \$document|\$frame|\$popup|\$important ]]; then skip=true; fi
               fi
+              $skip && continue
 
-              tmp=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//; s/[[:space:]]+$//')
-              [[ "$tmp" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: JS/CSS filter possibly malformed in $file -> $line"
+              [[ "$cleaned" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: Possible malformed regex in $file -> $line"
 
             done < "$file"
 
