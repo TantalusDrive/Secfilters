@@ -1,5 +1,7 @@
+[Adblock Plus 2.0]
 ! Title: IDN Homograph & Favicon Security List - AdGuard version (MV2)
 ! Version: v1.0.1
+! Expires: 7 days
 ! Last updated: 2026-01-20
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
 ! without breaking site functionality.
