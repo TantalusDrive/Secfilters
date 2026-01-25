@@ -2,7 +2,7 @@
   "lists": [
     {
       "name": "IDN Homograph & Favicon Security List - ABP version (MV2)",
-      "description": "Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking.",
+      "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors without breaking site functionality.",
       "formats": ["ABP"],
       "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/main/Lists/ABP/IDNHomographFavicon.txt",
       "license": "CC BY-NC-SA 4.0",
@@ -14,7 +14,7 @@
     },
     {
       "name": "IDN Homograph & Favicon Security List - uBlock Origin version",
-      "description": "Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking.",
+      "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors without breaking site functionality.",
       "formats": ["uBlock Origin"],
       "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/main/Lists/uBlock/IDNHomographFavicon.txt",
       "license": "CC BY-NC-SA 4.0",
@@ -26,7 +26,7 @@
     },
     {
       "name": "IDN Homograph & Favicon Security List - Brave version",
-      "description": "Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking.",
+      "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors without breaking site functionality.",
       "formats": ["Brave Shields"],
       "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/main/Lists/Brave/IDNHomographFavicon.txt",
       "license": "CC BY-NC-SA 4.0",
@@ -38,7 +38,7 @@
     },
     {
       "name": "IDN Homograph & Favicon Security List - AdGuard version (MV2)",
-      "description": "Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking.",
+      "description": "Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors without breaking site functionality.",
       "formats": ["AdGuard"],
       "url_raw": "https://raw.githubusercontent.com/TantalusDrive/Secfilters/main/Lists/AdGuard/IDNHomographFavicon.txt",
       "license": "CC BY-NC-SA 4.0",
