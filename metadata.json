@@ -9,8 +9,8 @@
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
-      "version": "v1.0.1",
-      "last_updated": "2026-01-20"
+      "version": "v1.0.2",
+      "last_updated": "2026-01-25"
     },
     {
       "name": "IDN Homograph & Favicon Security List - uBlock Origin version",
@@ -21,8 +21,8 @@
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
-      "version": "v1.0.1",
-      "last_updated": "2026-01-20"
+      "version": "v1.0.2",
+      "last_updated": "2026-01-25"
     },
     {
       "name": "IDN Homograph & Favicon Security List - Brave version",
@@ -33,8 +33,8 @@
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
-      "version": "v1.0.1",
-      "last_updated": "2026-01-20"
+      "version": "v1.0.2",
+      "last_updated": "2026-01-25"
     },
     {
       "name": "IDN Homograph & Favicon Security List - AdGuard version (MV2)",
@@ -45,8 +45,8 @@
       "update_policy": "Stable; updated only when new, well-established attack vectors emerge",
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
-      "version": "v1.0.1",
-      "last_updated": "2026-01-20"
+      "version": "v1.0.2",
+      "last_updated": "2026-01-25"
     }
   ]
 }
