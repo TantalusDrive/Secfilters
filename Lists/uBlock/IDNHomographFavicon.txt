@@ -14,7 +14,7 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
-/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(/|$)/$document,frame,popup,important
+/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(\/|$)/$document,frame,popup,important
 
 ! Exceptions: verified global domains
 @@||xn--fsq.com^
@@ -88,8 +88,7 @@
 
 ! --- Favicons persistent tracking ---
 ! Block JS-based favicon reinsertion globally
-##+js(aopr, HTMLLinkElement.prototype.rel)
-##+js(aopr, HTMLLinkElement.prototype.href)
+##+js(aopr, HTMLLinkElement.prototype.rel, /icon/i)
 
 ! Block CSS-based favicon injection globally
 ##:matches-css(background-image: /(favicon|apple-touch-icon|mask-icon)/i)
