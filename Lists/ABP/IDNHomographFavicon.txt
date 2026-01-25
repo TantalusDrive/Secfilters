@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Title: IDN Homograph & Favicon Security List - ABP version (MV2)
-! Version: v1.0.1
+! Version: v1.0.2
 ! Expires: 7 days
 ! Last updated: 2026-01-20
 ! Description: Security‑focused filter list mitigating IDN/Punycode homograph phishing and persistent favicon‑based tracking
@@ -11,6 +11,7 @@
 ! Repository: https://github.com/TantalusDrive/Secfilters
 ! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
 ! Notes: Includes verified exceptions for major brands/institutions to minimize false positives.
+! Cosmetic favicon blocking is used in ABP as a defensive fallback due to lack of scriptlet injection support.
 
 
 ! --- IDN / Punycode homograph attacks ---
@@ -90,95 +91,8 @@
 @@||xn--j6w193g^
 @@||xn--kpry57d^
 
-! Favicons tracking - targeted & safe
-! Social networks
-reddit.com##link[rel~=icon]
-instagram.com##link[rel~=icon]
-cdninstagram.com##link[rel~=icon]
-facebook.com##link[rel~=icon]
-fbcdn.net##link[rel~=icon]
-twitter.com##link[rel~=icon]
-tiktok.com##link[rel~=icon]
-tiktokcdn.com##link[rel~=icon]
-youtube.com##link[rel~=icon]
-medium.com##link[rel~=icon]
-pinterest.com##link[rel~=icon]
-snapchat.com##link[rel~=icon]
-discord.com##link[rel~=icon]
-messenger.com##link[rel~=icon]
-whatsapp.com##link[rel~=icon]
-telegram.org##link[rel~=icon]
-weibo.com##link[rel~=icon]
-vk.com##link[rel~=icon]
-line.me##link[rel~=icon]
-kakao.com##link[rel~=icon]
-threads.net##link[rel~=icon]
-
-! News / media
-nytimes.com##link[rel~=icon]
-washingtonpost.com##link[rel~=icon]
-bbc.com##link[rel~=icon]
-cnn.com##link[rel~=icon]
-reuters.com##link[rel~=icon]
-theguardian.com##link[rel~=icon]
-forbes.com##link[rel~=icon]
-bloomberg.com##link[rel~=icon]
-wired.com##link[rel~=icon]
-techcrunch.com##link[rel~=icon]
-huffpost.com##link[rel~=icon]
-mashable.com##link[rel~=icon]
-vice.com##link[rel~=icon]
-cnbc.com##link[rel~=icon]
-aljazeera.com##link[rel~=icon]
-ft.com##link[rel~=icon]
-economist.com##link[rel~=icon]
-lemonde.fr##link[rel~=icon]
-spiegel.de##link[rel~=icon]
-elpais.com##link[rel~=icon]
-asia.nikkei.com##link[rel~=icon]
-smh.com.au##link[rel~=icon]
-cbc.ca##link[rel~=icon]
-
-! E-commerce / retail
-amazon.com##link[rel~=icon]
-ebay.com##link[rel~=icon]
-walmart.com##link[rel~=icon]
-bestbuy.com##link[rel~=icon]
-nike.com##link[rel~=icon]
-adidas.com##link[rel~=icon]
-steamdb.info##link[rel~=icon]
-shopdisney.com##link[rel~=icon]
-aliexpress.com##link[rel~=icon]
-etsy.com##link[rel~=icon]
-target.com##link[rel~=icon]
-costco.com##link[rel~=icon]
-newegg.com##link[rel~=icon]
-gamestop.com##link[rel~=icon]
-micromania.fr##link[rel~=icon]
-hm.com##link[rel~=icon]
-zara.com##link[rel~=icon]
-uniqlo.com##link[rel~=icon]
-lazada.com##link[rel~=icon]
-rakuten.com##link[rel~=icon]
-flipkart.com##link[rel~=icon]
-
-! Gaming / streaming / entertainment
-steamcommunity.com##link[rel~=icon]
-playstation.com##link[rel~=icon]
-xbox.com##link[rel~=icon]
-epicgames.com##link[rel~=icon]
-twitch.tv##link[rel~=icon]
-netflix.com##link[rel~=icon]
-hulu.com##link[rel~=icon]
-disneyplus.com##link[rel~=icon]
-spotify.com##link[rel~=icon]
-soundcloud.com##link[rel~=icon]
-roblox.com##link[rel~=icon]
-minecraft.net##link[rel~=icon]
-primevideo.com##link[rel~=icon]
-hbo.com##link[rel~=icon]
-crunchyroll.com##link[rel~=icon]
-funimation.com##link[rel~=icon]
+! Favicons tracking
+##link[rel~=icon]
 
 ! Exceptions - critical logins / breakage-prone
 wikipedia.org#@#link[rel~=icon]
