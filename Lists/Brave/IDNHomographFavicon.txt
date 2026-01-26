@@ -20,6 +20,8 @@
 ||xn--*/favicon*$image
 ||xn--*/apple-touch-icon*$image
 ||xn--*/mask-icon*$image
+||xn--*/favicon-16x16*$image
+||xn--*/favicon-32x32*$image
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
@@ -95,6 +97,8 @@
 ||*/favicon.ico$image,third-party
 ||*/apple-touch-icon*$image,third-party
 ||*/favicon-32x32.png$image,third-party
+||*/favicon-16x16.png$image,third-party
+||*/favicon.svg$image,third-party
 
 ! Exceptions - critical logins / breakage-prone
 @@||wikipedia.org/favicon.ico$image
