@@ -2,7 +2,7 @@
 ! Title: IDN Homograph & Favicon Security List - Brave version
 ! Version: v1.0.2
 ! Expires: 7 days
-! Last updated: 2026-01-25
+! Last updated: 2026-01-26
 ! Description: Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
