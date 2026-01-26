@@ -20,8 +20,7 @@
 ||xn--*/favicon*$image
 ||xn--*/apple-touch-icon*$image
 ||xn--*/mask-icon*$image
-||xn--*/favicon-16x16*$image
-||xn--*/favicon-32x32*$image
+||xn--*/favicon.svg$image
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
