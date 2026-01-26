@@ -20,27 +20,74 @@
 ||xn--^$image,important
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
-@@||xn--fsq.com^,xn--wgv71a.com^,xn--fiqs8s.com^,xn--xq7j.com^,\
-xn--mgbaam7a8h.com^,xn--mgberp4a.com^,xn--caf-dma.com^,\
-xn--banco-bb.com^,xn--mdo-bga.com^,xn--apple-43a.com^,\
-xn--google-qc0b.com^,xn--microsoft-8q0b.com^,xn--amazon-3ra.com^,\
-xn--wikipedia-7qa.org^,xn--mozilla-8qa.org^,xn--intel-43a.com^,\
-xn--coca-44d.com^,xn--nike-43a.com^,xn--adidas-43a.com^,\
-xn--facebook-43a.com^,xn--twitter-43a.com^,xn--youtube-43a.com^,\
-xn--reddit-43a.com^,xn--linkedin-43a.com^,xn--ibm-43a.com^,\
-xn--oracle-43a.com^,xn--paypal-43a.com^,xn--visa-43a.com^,\
-xn--mastercard-43a.com^,xn--un-43a.org^,xn--eu-43a.eu^,\
-xn--who-43a.int^,xn--nasa-43a.gov^,xn--cia-43a.gov^,\
-xn--fbi-43a.gov^,xn--unicef-43a.org^,xn--unesco-43a.org^,\
-xn--imf-43a.int^,xn--oecd-43a.org^
-! Amazon.cn (亚马逊 TLD) / Amazon Katakana / Etisalat / China carriers / Finance
-@@||xn--mgba3a3ejt^,xn--cckwcxetd^,xn--mgbaakc7dvf^,\
-xn--8y0a063a^,xn--6frz82g^,xn--fiq64b^
-! IDN ccTLDs and geopolitical / corporate TLDs
-@@||xn--p1ai^,xn--j1amh^,xn--jlq480n2rg^,\
-xn--b4w605ferd^,xn--5su34j936bgsg^,xn--fiqz9s^,\
-xn--90ae^,xn--mgberp4a5d4ar^,xn--wgbh1c^,\
-xn--j6w193g^,xn--kpry57d^
+@@||xn--fsq.com^
+@@||xn--wgv71a.com^
+@@||xn--fiqs8s.com^
+@@||xn--xq7j.com^
+@@||xn--mgbaam7a8h.com^
+@@||xn--mgberp4a.com^
+@@||xn--caf-dma.com^
+@@||xn--banco-bb.com^
+@@||xn--mdo-bga.com^
+@@||xn--apple-43a.com^
+@@||xn--google-qc0b.com^
+@@||xn--microsoft-8q0b.com^
+@@||xn--amazon-3ra.com^
+@@||xn--wikipedia-7qa.org^
+@@||xn--mozilla-8qa.org^
+@@||xn--intel-43a.com^
+@@||xn--coca-44d.com^
+@@||xn--nike-43a.com^
+@@||xn--adidas-43a.com^
+@@||xn--facebook-43a.com^
+@@||xn--twitter-43a.com^
+@@||xn--youtube-43a.com^
+@@||xn--reddit-43a.com^
+@@||xn--linkedin-43a.com^
+@@||xn--ibm-43a.com^
+@@||xn--oracle-43a.com^
+@@||xn--paypal-43a.com^
+@@||xn--visa-43a.com^
+@@||xn--mastercard-43a.com^
+@@||xn--un-43a.org^
+@@||xn--eu-43a.eu^
+@@||xn--who-43a.int^
+@@||xn--nasa-43a.gov^
+@@||xn--cia-43a.gov^
+@@||xn--fbi-43a.gov^
+@@||xn--unicef-43a.org^
+@@||xn--unesco-43a.org^
+@@||xn--imf-43a.int^
+@@||xn--oecd-43a.org^
+! Amazon.cn (亚马逊 TLD)
+@@||xn--mgba3a3ejt^
+! Amazon Katakana TLD
+@@||xn--cckwcxetd^
+! Etisalat/اتصالات
+@@||xn--mgbaakc7dvf^
+! China United Network Communications (联通)
+@@||xn--8y0a063a^
+! China Mobile (移动)
+@@||xn--6frz82g^
+! CITIC Group (.中信)
+@@||xn--fiq64b^
+! .рф (Russian IDN ccTLD)
+@@||xn--p1ai^
+! .укр (Ukrainian IDN ccTLD)
+@@||xn--j1amh^
+! .亚马逊 (Amazon – cinese)
+@@||xn--jlq480n2rg^
+! .淡马锡 (Temasek – cinese)
+@@||xn--b4w605ferd^
+! .香格里拉 (Shangri‑La – cinese)
+@@||xn--5su34j936bgsg^
+! .中国 (Cina) – Punycode per .中国
+@@||xn--fiqz9s^
+@@||xn--90ae^
+@@||xn--mgberp4a5d4ar^
+@@||xn--wgbh1c^
+@@||xn--j6w193g^
+@@||xn--kpry57d^
 
 ! Favicons tracking - targeted & safe
 ##link[rel~="icon"]
