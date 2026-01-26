@@ -97,6 +97,7 @@
 ||*/apple-touch-icon*$image,third-party
 ||*/favicon-32x32.png$image,third-party
 ||*/favicon-16x16.png$image,third-party
+||*/favicon-48x48.png$image,third-party
 ||*/favicon.svg$image,third-party
 
 ! Exceptions - critical logins / breakage-prone
