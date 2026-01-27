@@ -1,8 +1,8 @@
 [Adblock Plus 2.0]
 ! Title: IDN Homograph & Favicon Security List - uBlock Origin version
-! Version: v1.0.2
+! Version: v1.0.3
 ! Expires: 7 days
-! Last updated: 2026-01-26
+! Last updated: 2026-01-27
 ! Description: Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
@@ -106,38 +106,19 @@
 ##:matches-css(background-image: /(favicon|apple-touch-icon|mask-icon)/i)
 
 ! Exceptions - critical logins / breakage-prone
-wikipedia.org#@#link[rel~=icon]
-mozilla.org#@#link[rel~=icon]
-brave.com#@#link[rel~=icon]
-github.com#@#link[rel~=icon]
-stackoverflow.com#@#link[rel~=icon]
-linkedin.com#@#link[rel~=icon]
-gmail.com#@#link[rel~=icon]
-office.com#@#link[rel~=icon]
-outlook.com#@#link[rel~=icon]
-microsoft.com#@#link[rel~=icon]
-slack.com#@#link[rel~=icon]
-notion.so#@#link[rel~=icon]
-dropbox.com#@#link[rel~=icon]
-signal.org#@#link[rel~=icon]
-mastodon.social#@#link[rel~=icon]
-duckduckgo.com#@#link[rel~=icon]
-nextcloud.com#@#link[rel~=icon]
-matrix.org#@#link[rel~=icon]
-app.element.io#@#link[rel~=icon]
-atlassian.com#@#link[rel~=icon]
-figma.com#@#link[rel~=icon]
-gitlab.com#@#link[rel~=icon]
-proton.me#@#link[rel~=icon]
-google.com#@#link[rel~=icon]
-live.com#@#link[rel~=icon]
-zoom.us#@#link[rel~=icon]
-apple.com#@#link[rel~=icon]
-salesforce.com#@#link[rel~=icon]
-adobe.com#@#link[rel~=icon]
-icloud.com#@#link[rel~=icon]
-a.trellocdn.com#@#link[rel~=icon]
-asana.com#@#link[rel~=icon]
-hubspot.com#@#link[rel~=icon]
-zoho.com#@#link[rel~=icon]
-trello.com#@#link[rel~=icon]
+@@||a.trellocdn.com^$image,third-party
+@@||cdn.jsdelivr.net^$image,third-party
+@@||cdnjs.cloudflare.com^$image,third-party
+@@||unpkg.com^$image,third-party
+@@||cloudfront.net^$image,third-party
+@@||s3.amazonaws.com^$image,third-party
+@@||storage.googleapis.com^$image,third-party
+@@||lh3.googleusercontent.com^$image,third-party
+@@||sstatic.net^$image,third-party
+@@||github.githubassets.com^$image,third-party
+@@||static.figma.com^$image,third-party
+@@||cfl.dropboxstatic.com^$image,third-party
+@@||static2.sharepointonline.com^$image,third-party
+@@||statics.office.com^$image,third-party
+@@||fonts.gstatic.com^$image,third-party
+@@||ssl.gstatic.com^$image,third-party
