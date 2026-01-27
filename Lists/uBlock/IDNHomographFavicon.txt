@@ -15,7 +15,6 @@
 
 ! --- IDN / Punycode homograph attacks ---
 /^https?:\/\/([a-z0-9-]{1,32}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,frame,popup
-/^https?:\/\/([a-z0-9-]{1,32}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}/$document,redirect
 
 ! Block favicon image loads on Punycode domains
 ||xn--*$image,third-party
