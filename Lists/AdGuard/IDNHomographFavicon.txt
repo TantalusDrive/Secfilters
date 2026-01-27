@@ -1,8 +1,8 @@
 [Adblock Plus 2.0]
 ! Title: IDN Homograph & Favicon Security List - AdGuard version (MV2)
-! Version: v1.0.2
+! Version: v1.0.3
 ! Expires: 7 days
-! Last updated: 2026-01-25
+! Last updated: 2026-01-27
 ! Description: Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
@@ -89,40 +89,28 @@
 @@||xn--j6w193g^
 @@||xn--kpry57d^
 
-! Favicons tracking - targeted & safe
-##link[rel~="icon"]
-##link[rel~="apple-touch-icon"]
-##link[rel~="mask-icon"]
-##link[rel~="fluid-icon"]
-##[style*="apple-touch-icon"]
-##[style*="mask-icon"]
-##[style*="/favicon"]
+! Favicons tracking
+||*/favicon.ico$image,third-party
+||*/apple-touch-icon*$image,third-party
+||*/favicon-32x32.png$image,third-party
+||*/favicon-16x16.png$image,third-party
+||*/favicon-48x48.png$image,third-party
+||*/favicon.svg$image,third-party
 
 ! Exceptions - critical logins / breakage-prone
-wikipedia.org,mozilla.org,brave.com,github.com,stackoverflow.com,linkedin.com,\
-gmail.com,office.com,outlook.com,microsoft.com,slack.com,notion.so,dropbox.com,\
-signal.org,mastodon.social,duckduckgo.com,nextcloud.com,matrix.org,app.element.io,\
-atlassian.com,figma.com,gitlab.com,proton.me,google.com,live.com,zoom.us,apple.com,\
-salesforce.com,adobe.com,icloud.com,a.trellocdn.com,asana.com,hubspot.com,\
-zoho.com,trello.com#@#link[rel~="icon"]
-
-wikipedia.org,mozilla.org,brave.com,github.com,stackoverflow.com,linkedin.com,\
-gmail.com,office.com,outlook.com,microsoft.com,slack.com,notion.so,dropbox.com,\
-signal.org,mastodon.social,duckduckgo.com,nextcloud.com,matrix.org,app.element.io,\
-atlassian.com,figma.com,gitlab.com,proton.me,google.com,live.com,zoom.us,apple.com,\
-salesforce.com,adobe.com,icloud.com,a.trellocdn.com,asana.com,hubspot.com,\
-zoho.com,trello.com#@#link[rel~="apple-touch-icon"]
-
-wikipedia.org,mozilla.org,brave.com,github.com,stackoverflow.com,linkedin.com,\
-gmail.com,office.com,outlook.com,microsoft.com,slack.com,notion.so,dropbox.com,\
-signal.org,mastodon.social,duckduckgo.com,nextcloud.com,matrix.org,app.element.io,\
-atlassian.com,figma.com,gitlab.com,proton.me,google.com,live.com,zoom.us,apple.com,\
-salesforce.com,adobe.com,icloud.com,a.trellocdn.com,asana.com,hubspot.com,\
-zoho.com,trello.com#@#link[rel~="mask-icon"]
-
-wikipedia.org,mozilla.org,brave.com,github.com,stackoverflow.com,linkedin.com,\
-gmail.com,office.com,outlook.com,microsoft.com,slack.com,notion.so,dropbox.com,\
-signal.org,mastodon.social,duckduckgo.com,nextcloud.com,matrix.org,app.element.io,\
-atlassian.com,figma.com,gitlab.com,proton.me,google.com,live.com,zoom.us,apple.com,\
-salesforce.com,adobe.com,icloud.com,a.trellocdn.com,asana.com,hubspot.com,\
-zoho.com,trello.com#@#link[rel~="fluid-icon"]
+@@||a.trellocdn.com^$image,third-party
+@@||cdn.jsdelivr.net^$image,third-party
+@@||cdnjs.cloudflare.com^$image,third-party
+@@||unpkg.com^$image,third-party
+@@||cloudfront.net^$image,third-party
+@@||s3.amazonaws.com^$image,third-party
+@@||storage.googleapis.com^$image,third-party
+@@||lh3.googleusercontent.com^$image,third-party
+@@||sstatic.net^$image,third-party
+@@||github.githubassets.com^$image,third-party
+@@||static.figma.com^$image,third-party
+@@||cfl.dropboxstatic.com^$image,third-party
+@@||static2.sharepointonline.com^$image,third-party
+@@||statics.office.com^$image,third-party
+@@||fonts.gstatic.com^$image,third-party
+@@||ssl.gstatic.com^$image,third-party
