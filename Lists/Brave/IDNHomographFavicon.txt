@@ -17,9 +17,7 @@
 ||xn--*$document
 
 ! Block favicon image loads on Punycode domains
-||xn--*/favicon*$image,third-party
-||xn--*/apple-touch-icon*$image,third-party
-||xn--*/mask-icon*$image,third-party
+||xn--*$image,third-party
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
@@ -92,12 +90,9 @@
 @@||xn--kpry57d^
 
 ! Favicons tracking
-||*/favicon.ico$image,third-party
+||*/favicon*$image,third-party
 ||*/apple-touch-icon*$image,third-party
-||*/favicon-32x32.png$image,third-party
-||*/favicon-16x16.png$image,third-party
-||*/favicon-48x48.png$image,third-party
-||*/favicon.svg$image,third-party
+||*/mask-icon*$image,third-party
 
 ! Exceptions - critical logins / breakage-prone
 @@||a.trellocdn.com^$image,third-party
