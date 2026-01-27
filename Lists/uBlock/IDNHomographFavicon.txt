@@ -15,75 +15,39 @@
 
 ! --- IDN / Punycode homograph attacks ---
 /^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(\/|$)/$document,frame,popup,important
+/^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}/$document,redirect,important
 
 ! Block favicon image loads on Punycode domains
-||xn--*/favicon*$image
-||xn--*/apple-touch-icon*$image
-||xn--*/mask-icon*$image
+||xn--*/favicon*^$image,third-party
+||xn--*/apple-touch-icon*^$image,third-party
+||xn--*/mask-icon*^$image,third-party
 
 ! Exceptions: verified global domains
 @@||xn--fsq.com^
 @@||xn--wgv71a.com^
 @@||xn--fiqs8s.com^
 @@||xn--xq7j.com^
-@@||xn--mgbaam7a8h.com^
-@@||xn--mgberp4a.com^
-@@||xn--caf-dma.com^
-@@||xn--banco-bb.com^
-@@||xn--mdo-bga.com^
-@@||xn--apple-43a.com^
-@@||xn--google-qc0b.com^
-@@||xn--microsoft-8q0b.com^
-@@||xn--amazon-3ra.com^
-@@||xn--wikipedia-7qa.org^
-@@||xn--mozilla-8qa.org^
-@@||xn--intel-43a.com^
-@@||xn--coca-44d.com^
-@@||xn--nike-43a.com^
-@@||xn--adidas-43a.com^
-@@||xn--facebook-43a.com^
-@@||xn--twitter-43a.com^
-@@||xn--youtube-43a.com^
-@@||xn--reddit-43a.com^
-@@||xn--linkedin-43a.com^
-@@||xn--ibm-43a.com^
-@@||xn--oracle-43a.com^
-@@||xn--paypal-43a.com^
-@@||xn--visa-43a.com^
-@@||xn--mastercard-43a.com^
-@@||xn--un-43a.org^
-@@||xn--eu-43a.eu^
-@@||xn--who-43a.int^
-@@||xn--nasa-43a.gov^
-@@||xn--cia-43a.gov^
-@@||xn--fbi-43a.gov^
-@@||xn--unicef-43a.org^
-@@||xn--unesco-43a.org^
-@@||xn--imf-43a.int^
-@@||xn--oecd-43a.org^
-! Amazon.cn (亚马逊 TLD)
+@@||xn--mgbaam7a8h.com|xn--mgberp4a.com|xn--caf-dma.com^
+@@||xn--banco-bb.com|xn--mdo-bga.com^
+@@||xn--apple-43a.com|xn--google-qc0b.com|xn--microsoft-8q0b.com|xn--amazon-3ra.com^
+@@||xn--wikipedia-7qa.org|xn--mozilla-8qa.org^
+@@||xn--intel-43a.com|xn--coca-44d.com|xn--nike-43a.com|xn--adidas-43a.com^
+@@||xn--facebook-43a.com|xn--twitter-43a.com|xn--youtube-43a.com|xn--reddit-43a.com|xn--linkedin-43a.com^
+@@||xn--ibm-43a.com|xn--oracle-43a.com|xn--paypal-43a.com|xn--visa-43a.com|xn--mastercard-43a.com^
+@@||xn--un-43a.org|xn--eu-43a.eu|xn--who-43a.int^
+@@||xn--nasa-43a.gov|xn--cia-43a.gov|xn--fbi-43a.gov^
+@@||xn--unicef-43a.org|xn--unesco-43a.org|xn--imf-43a.int|xn--oecd-43a.org^
 @@||xn--mgba3a3ejt^
-! Amazon Katakana TLD
 @@||xn--cckwcxetd^
-! Etisalat/اتصالات
 @@||xn--mgbaakc7dvf^
-! China United Network Communications (联通)
 @@||xn--8y0a063a^
-! China Mobile (移动)
 @@||xn--6frz82g^
-! CITIC Group (.中信)
 @@||xn--fiq64b^
-! .рф (Russian IDN ccTLD)
 @@||xn--p1ai^
-! .укр (Ukrainian IDN ccTLD)
 @@||xn--j1amh^
-! .亚马逊 (Amazon – cinese)
 @@||xn--jlq480n2rg^
-! .淡马锡 (Temasek – cinese)
 @@||xn--b4w605ferd^
-! .香格里拉 (Shangri‑La – cinese)
 @@||xn--5su34j936bgsg^
-! .中国 (Cina) – Punycode per .中国
 @@||xn--fiqz9s^
 @@||xn--90ae^
 @@||xn--mgberp4a5d4ar^
@@ -100,25 +64,12 @@
 ||*/favicon.svg$image,third-party
 
 ! Block JS-based favicon reinsertion globally
-##+js(aopr, HTMLLinkElement.prototype.rel, /icon/i)
+##+js(aopr, HTMLLinkElement.prototype.rel, /(icon|shortcut icon)/i)
 
 ! Block CSS-based favicon injection globally
 ##:matches-css(background-image: /(favicon|apple-touch-icon|mask-icon)/i)
 
 ! Exceptions - critical logins / breakage-prone
-@@||a.trellocdn.com^$image,third-party
-@@||cdn.jsdelivr.net^$image,third-party
-@@||cdnjs.cloudflare.com^$image,third-party
-@@||unpkg.com^$image,third-party
-@@||cloudfront.net^$image,third-party
-@@||s3.amazonaws.com^$image,third-party
-@@||storage.googleapis.com^$image,third-party
-@@||lh3.googleusercontent.com^$image,third-party
-@@||sstatic.net^$image,third-party
-@@||github.githubassets.com^$image,third-party
-@@||static.figma.com^$image,third-party
-@@||cfl.dropboxstatic.com^$image,third-party
-@@||static2.sharepointonline.com^$image,third-party
-@@||statics.office.com^$image,third-party
-@@||fonts.gstatic.com^$image,third-party
-@@||ssl.gstatic.com^$image,third-party
+@@||a.trellocdn.com|cdn.jsdelivr.net|cdnjs.cloudflare.com|unpkg.com|cloudfront.net^$image,third-party
+@@||s3.amazonaws.com|storage.googleapis.com|lh3.googleusercontent.com|fonts.gstatic.com|ssl.gstatic.com^$image,third-party
+@@||github.githubassets.com|static.figma.com|cfl.dropboxstatic.com|static2.sharepointonline.com|statics.office.com^$image,third-party
