@@ -113,3 +113,14 @@
 @@||statics.office.com^$image,third-party
 @@||fonts.gstatic.com^$image,third-party
 @@||ssl.gstatic.com^$image,third-party
+@@||www.google.com/s2/favicons^$image,third-party
+@@||secure.gravatar.com^$image,third-party
+@@||gravatar.com^$image,third-party
+@@||avatars.githubusercontent.com^$image,third-party
+@@||disqus.com^$image,third-party
+@@||c.disquscdn.com^$image,third-party
+@@||slack-edge.com^$image,third-party
+@@||static.cloudflareinsights.com^$image,third-party
+@@||akamaihd.net^$image,third-party
+@@||static.xx.fbcdn.net^$image,third-party
+@@||scontent.xx.fbcdn.net^$image,third-party
