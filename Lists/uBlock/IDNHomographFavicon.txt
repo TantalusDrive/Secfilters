@@ -18,9 +18,9 @@
 /^https?:\/\/([a-z0-9-]{1,25}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}/$document,redirect,important
 
 ! Block favicon image loads on Punycode domains
-||xn--*/favicon*^$image,third-party
-||xn--*/apple-touch-icon*^$image,third-party
-||xn--*/mask-icon*^$image,third-party
+||xn--*/favicon*$image,third-party
+||xn--*/apple-touch-icon*$image,third-party
+||xn--*/mask-icon*$image,third-party
 
 ! Exceptions: verified global domains
 @@||xn--fsq.com^
