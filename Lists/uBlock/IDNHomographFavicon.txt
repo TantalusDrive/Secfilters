@@ -54,9 +54,9 @@
 @@||xn--kpry57d^
 
 ! --- Favicons persistent tracking ---
-||*/favicon*$image,third-party
-||*/apple-touch-icon*$image,third-party
-||*/mask-icon*$image,third-party
+||*favicon*$image,third-party
+||*apple-touch-icon*$image,third-party
+||*mask-icon*$image,third-party
 
 ! Block JS-based favicon reinsertion globally
 ##+js(aopr, HTMLLinkElement.prototype.rel, /(icon|shortcut icon)/i)
