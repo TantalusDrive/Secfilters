@@ -1,5 +1,5 @@
 # Security Filter Lists
-> Addressing niche but reproducible security abuse vectors often underrepresented in mainstream filter lists.
+> Addressing niche but reproducible **security abuse vectors** often underrepresented in mainstream filter lists.
 
 This repository hosts a small set of filter lists targeting specific security abuse vectors at the network and browser level.
 
@@ -8,10 +8,10 @@ They are not meant for general-purpose adblocking or privacy use. In practice, t
 ## Design principles
 
 **Security-first scope**  
-We only address vectors with clear, observable security implications. Each rule is added with a deliberate focus on mitigating actual threats.
+We address only vectors with clear, reproducible security implications. Each rule is added deliberately to mitigate actual threats.
 
 **Conservative filtering**  
-Rules are included only when reproducible and demonstrably safe. We avoid speculative or aggressive filtering that could disrupt legitimate site functionality.
+Rules are included only when demonstrably safe. We avoid speculative or aggressive filtering that could disrupt legitimate site functionality.
 
 **Low churn**  
 Lists are designed to remain effective over time, requiring minimal maintenance. Updates occur only when security risks evolve or new edge cases are discovered.
@@ -21,8 +21,8 @@ Major brands, governments, and institutions are deliberately allowlisted to prev
 
 ## Compatibility
 
-- Every adblocker (ABP, AdGuard, Brave Shields, uBlock Origin) should use their **engine-specific** variant.  
-- Each list is intended to work independently; you should subscribe only to the lists relevant to your setup.
+- Each adblocker (ABP, AdGuard, Brave Shields, uBlock Origin) should use their **engine-specific** variant.
+- **Do not combine lists for different engines**; subscribe only to the list matching your setup.
 
 ## What this repository does not aim to do
 
@@ -44,8 +44,8 @@ This list is conceptually inspired by the work of [DandelionSprout](https://gith
 - **[IDN / Punycode homograph attacks](https://en.wikipedia.org/wiki/IDN_homograph_attack)**  
   Prevents phishing and impersonation using visually confusable internationalized domain names.  
 
-- **Persistent [favicon-based tracking](https://www.ghacks.net/2021/01/22/favicons-may-be-used-to-track-users/)**  
-  Reduces fingerprinting techniques exploiting favicon cache persistence.  
+- **Persistent [favicon abuse](https://www.ghacks.net/2021/01/22/favicons-may-be-used-to-track-users/)**  
+  Prevents security risks from favicon caching, such as spoofing, phishing, and malicious tracking vectors.
 
 >**Subscription URLs**
 >- **ABP:** https://tantalusdrive.github.io/Secfilters/Lists/ABP/IDNHomographFavicon.txt
