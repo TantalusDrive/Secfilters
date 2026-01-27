@@ -17,9 +17,9 @@
 ||xn--*$document
 
 ! Block favicon image loads on Punycode domains
-||xn--*/favicon*$image
-||xn--*/apple-touch-icon*$image
-||xn--*/mask-icon*$image
+||xn--*/favicon*$image,third-party
+||xn--*/apple-touch-icon*$image,third-party
+||xn--*/mask-icon*$image,third-party
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
