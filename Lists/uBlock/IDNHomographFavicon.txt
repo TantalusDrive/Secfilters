@@ -64,6 +64,19 @@
 ##:matches-css(background-image: /(favicon|apple-touch-icon|mask-icon)/i)
 
 ! Exceptions - critical logins / breakage-prone
-@@||a.trellocdn.com|cdn.jsdelivr.net|cdnjs.cloudflare.com|unpkg.com|cloudfront.net^$image,third-party
-@@||s3.amazonaws.com|storage.googleapis.com|lh3.googleusercontent.com|fonts.gstatic.com|ssl.gstatic.com^$image,third-party
+@@||a.trellocdn.com^$image,third-party
+@@||cdn.jsdelivr.net|cdnjs.cloudflare.com|unpkg.com^$image,third-party
+@@||cloudfront.net^$image,third-party
+@@||s3.amazonaws.com|storage.googleapis.com^$image,third-party
+@@||lh3.googleusercontent.com^$image,third-party
 @@||github.githubassets.com|static.figma.com|cfl.dropboxstatic.com|static2.sharepointonline.com|statics.office.com^$image,third-party
+@@||sstatic.net^$image,third-party
+@@||fonts.gstatic.com|ssl.gstatic.com^$image,third-party
+@@||www.google.com/s2/favicons^$image,third-party
+@@||secure.gravatar.com|gravatar.com^$image,third-party
+@@||avatars.githubusercontent.com^$image,third-party
+@@||disqus.com|c.disquscdn.com^$image,third-party
+@@||slack-edge.com^$image,third-party
+@@||static.cloudflareinsights.com^$image,third-party
+@@||akamaihd.net^$image,third-party
+@@||static.xx.fbcdn.net|scontent.xx.fbcdn.net^$image,third-party
