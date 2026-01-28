@@ -12,6 +12,22 @@ Updates will only be recorded when:
 
 ---
 
+## [v1.0.3] - 2026-01-28
+
+### Stable release
+
+- Added:
+  - Refined IDN/Punycode homograph rules and favicon tracking.
+  - Expanded favicon whitelist to cover additional cases.
+- Changes:
+  - Synchronized `metadata.json` and list headers (version and last_updated).
+  - Minor adjustments to exception rules and descriptions.
+- Fixes:
+  - Consolidated favicon rules to reduce potential conflicts.
+  - Corrected minor formatting issues across lists.
+
+---
+
 ## [v1.0.2] - 2026-01-20
 
 ### Hotfixes
