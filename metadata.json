@@ -1,4 +1,13 @@
 {
+  "repo": {
+    "name": "Secfilters",
+    "description": "Collection of security-focused filter lists mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors.",
+    "maintainer": "TantalusDrive",
+    "homepage": "https://github.com/TantalusDrive/Secfilters",
+    "license": "CC BY-NC-SA 4.0",
+    "version": "v1.0.3",
+    "last_updated": "2026-01-28"
+  },
   "lists": [
     {
       "name": "IDN Homograph & Favicon Security List - ABP version (MV2)",
@@ -10,7 +19,8 @@
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
       "version": "v1.0.3",
-      "last_updated": "2026-01-27"
+      "last_updated": "2026-01-27",
+      "hash": ""
     },
     {
       "name": "IDN Homograph & Favicon Security List - uBlock Origin version",
@@ -22,7 +32,8 @@
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
       "version": "v1.0.3",
-      "last_updated": "2026-01-28"
+      "last_updated": "2026-01-28",
+      "hash": ""
     },
     {
       "name": "IDN Homograph & Favicon Security List - Brave version",
@@ -34,7 +45,8 @@
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
       "version": "v1.0.3",
-      "last_updated": "2026-01-27"
+      "last_updated": "2026-01-27",
+      "hash": ""
     },
     {
       "name": "IDN Homograph & Favicon Security List - AdGuard version (MV2)",
@@ -46,7 +58,8 @@
       "maintainer": "TantalusDrive",
       "homepage": "https://github.com/TantalusDrive/Secfilters",
       "version": "v1.0.3",
-      "last_updated": "2026-01-27"
+      "last_updated": "2026-01-27",
+      "hash": ""
     }
   ]
 }
