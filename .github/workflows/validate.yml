@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'Lists/**'
+      - 'metadata.json'
   pull_request:
     paths:
       - 'Lists/**'
+      - 'metadata.json'
   workflow_dispatch:
 
 jobs:
@@ -17,57 +19,66 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.2
         with:
-          fetch-depth: 1
+          fetch-depth: 0  # necessario per leggere tag
 
-      - name: Smart validation of filter lists
+      - name: Smart validation + metadata chores
         shell: bash
         run: |
-          echo "Starting optimized smart validation..."
+          echo "Starting smart validation and metadata update..."
           ERRORS=0
+          DATE=$(date -I)
+          REPO_VERSION=$(git describe --tags --abbrev=0 || echo "v0.0.1")
+
+          # Aggiorna versione repo
+          jq --arg version "$REPO_VERSION" '.repo.version = $version' metadata.json > metadata.tmp && mv metadata.tmp metadata.json
 
           while IFS= read -r -d '' file; do
-            echo "Checking $file..."
+            echo "Processing $file..."
             cp "$file" "$file.bak"
             sed -i '1s/^\xEF\xBB\xBF//' "$file"
 
+            # Convert CRLF -> LF
             if grep -q $'\r' "$file"; then
-              echo "NOTICE: Converting CRLF to LF in $file"
               sed -i 's/\r$//' "$file"
             fi
 
+            # NULL bytes
             if LC_ALL=C grep -Pq '\x00' "$file" 2>/dev/null; then
               LC_ALL=C grep -Pn '\x00' "$file" 2>/dev/null | while IFS=: read -r lineno _; do
-                echo "WARNING: NULL byte found in $file at line $lineno"
+                echo "WARNING: NULL byte in $file at line $lineno"
               done
             fi
 
+            # Empty file
             [ ! -s "$file" ] && { echo "ERROR: $file is empty"; ERRORS=$((ERRORS+1)); }
 
+            # Trailing whitespace, denyallow, broad wildcard checks
             while IFS= read -r line || [ -n "$line" ]; do
               [[ -z "$line" || "$line" =~ ^! ]] && continue
-
-              [[ "$line" =~ [[:space:]]+$ ]] && echo "WARNING: Trailing whitespace in $file -> $line"
-              [[ "$line" =~ denyallow ]]  && echo "WARNING: $file contains denyallow -> $line"
-              [[ "$line" =~ \|\|\* ]]     && echo "WARNING: $file contains broad wildcard network filter -> $line"
-
-              cleaned=$(echo "$line" | sed -E 's/\$(document|frame|popup|important)$//')
-
-              [[ "$cleaned" =~ \|\|.+\|\| ]] && echo "WARNING: Multiple pipe detected in $file -> $line"
-
-              skip=false
-              if [[ "$line" =~ ^(##\+js|##:matches-css) ]]; then
-                if [[ "$line" == *xn--* || "$line" == *favicon* ]]; then skip=true; fi
-                if [[ "$line" =~ \(.*,.*,.+ ]]; then skip=true; fi
-                if [[ "$line" =~ \$document|\$frame|\$popup|\$important ]]; then skip=true; fi
-              fi
-              $skip && continue
-
-              [[ "$cleaned" =~ /[^/][[:space:]]*$ ]] && echo "WARNING: Possible malformed regex in $file -> $line"
-
+              [[ "$line" =~ [[:space:]]+$ ]] && echo "WARNING: Trailing whitespace -> $line"
+              [[ "$line" =~ denyallow ]]  && echo "WARNING: denyallow -> $line"
+              [[ "$line" =~ \|\|\* ]]     && echo "WARNING: broad wildcard -> $line"
             done < "$file"
 
+            # Duplicate lines
             DUP_LINES=$(awk '!/^!/ && NF{print}' "$file" | sort | uniq -d)
-            [ -n "$DUP_LINES" ] && { echo "WARNING: Duplicate lines in $file"; echo "$DUP_LINES"; }
+            [ -n "$DUP_LINES" ] && echo "WARNING: Duplicate lines in $file"
+
+            # --- AUTOMAZIONI METADATA ---
+            RELPATH=$(realpath --relative-to="$GITHUB_WORKSPACE" "$file")
+            HASH=$(sha256sum "$file" | awk '{print $1}')
+
+            # Aggiorna hash e last_updated in metadata.json
+            jq --arg file "$RELPATH" --arg hash "$HASH" --arg date "$DATE" \
+              '(.lists[] | select(.url==$file)).hash = $hash | (.lists[] | select(.url==$file)).last_updated = $date' \
+              metadata.json > metadata.tmp && mv metadata.tmp metadata.json
+
+            # Aggiorna header last_updated della lista
+            if grep -q '^! Last updated:' "$file"; then
+              sed -i "1s/^! Last updated:.*/! Last updated: $DATE/" "$file"
+            else
+              sed -i "1i! Last updated: $DATE" "$file"
+            fi
 
           done < <(find Lists -type f -name "*.txt" -print0)
 
