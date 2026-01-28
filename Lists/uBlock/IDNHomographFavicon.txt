@@ -2,7 +2,7 @@
 ! Title: IDN Homograph & Favicon Security List - uBlock Origin version
 ! Version: v1.0.3
 ! Expires: 30 days
-! Last updated: 2026-01-27
+! Last updated: 2026-01-28
 ! Description: Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
