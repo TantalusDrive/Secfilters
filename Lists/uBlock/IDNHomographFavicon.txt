@@ -14,7 +14,14 @@
 
 
 ! --- IDN / Punycode homograph attacks ---
+! Punycode domains (document-level)
 /^https?:\/\/([a-z0-9-]{1,32}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,frame,popup
+
+! Punycode in subdomain chains (phishing kits pattern)
+/^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\./$document,frame
+
+! IDN mixed ASCII + Unicode (true homograph signal)
+/^(https?:\/\/)(?=[^\/?#]*[A-Za-z])(?=[^\/?#]*[^\x00-\x7F])[^\/?#]*(?:[\/?#]|$)/$document,frame,popup
 
 ! Block favicon image loads on Punycode domains
 ||xn--*$image,third-party
@@ -53,12 +60,16 @@
 @@||xn--kpry57d^
 
 ! --- Favicons persistent tracking ---
-||*favicon*$image,third-party
-||*apple-touch-icon*$image,third-party
-||*mask-icon*$image,third-party
+||/favicon.ico$image,third-party
+||/favicon.png$image,third-party
+||/apple-touch-icon$image,third-party
+||/mask-icon$image,third-party
 
 ! Block JS-based favicon reinsertion globally
 ##+js(aopr, HTMLLinkElement.prototype.rel, /(icon|shortcut icon)/i)
+
+! Prevent cross-origin favicon via <link rel=icon>
+##+js(aopr, HTMLLinkElement.prototype.href, /^https?:\/\//)
 
 ! Block CSS-based favicon injection globally
 ##:matches-css(background-image: /(favicon|apple-touch-icon|mask-icon)/i)
