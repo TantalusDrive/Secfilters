@@ -139,3 +139,11 @@
 @@||akamaihd.net^$image,third-party
 @@||static.xx.fbcdn.net^$image,third-party
 @@||scontent.xx.fbcdn.net^$image,third-party
+
+! fallback DOM for better cross-engine coverage
+##link[rel~="icon"][href^="http"]
+##link[rel~="shortcut"][href^="http"]
+##link[rel~="apple-touch-icon"][href^="http"]
+##img[style*="background-image"][style*="favicon"]
+##img[style*="background-image"][style*="apple-touch-icon"]
+##img[style*="background-image"][style*="mask-icon"]
