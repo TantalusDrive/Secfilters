@@ -24,8 +24,12 @@ jobs:
         run: |
           set -euo pipefail
           ERRORS=0
+          WARNINGS=0
 
-          while IFS= read -r -d '' file; do
+          # build file list once (handles spaces/newlines)
+          mapfile -d '' files < <(find Lists -type f -name "*.txt" -print0)
+
+          for file in "${files[@]}"; do
             echo "Checking $file"
 
             # --- Critical checks (cause failure) ---
@@ -39,7 +43,14 @@ jobs:
               ERRORS=$((ERRORS+1))
             fi
 
-            if LC_ALL=C grep -Pq '\x00' "$file" 2>/dev/null; then
+            # NULL byte check using awk (portable on standard GNU awk / mawk)
+            if LC_ALL=C awk '{
+                for(i=1;i<=length($0);i++){
+                  c=substr($0,i,1);
+                  if (c == sprintf("%c",0)) { found=1; exit }
+                }
+              }
+              END { exit !found }' "$file"; then
               echo "ERROR: NULL byte found -> $file"
               ERRORS=$((ERRORS+1))
             fi
@@ -50,107 +61,134 @@ jobs:
               continue
             fi
 
-            # Header checks
-            if [ "$(grep -c '^! Title:' "$file" || true)" -ne 1 ]; then
-              echo "WARNING: missing or multiple Title header -> $file"
-            fi
-
-            if [ "$(grep -c '^! Version:' "$file" || true)" -ne 1 ]; then
-              echo "WARNING: missing or multiple Version header -> $file"
-            fi
-
-            if [ "$(grep -c '^! Last updated:' "$file" || true)" -ne 1 ]; then
-              echo "WARNING: missing or multiple Last updated header -> $file"
-            fi
-
-            # Line-level generic sanity
-            while IFS= read -r line || [ -n "$line" ]; do
-              # skip empty and comment lines
-              [[ -z "$line" || "$line" =~ ^! ]] && continue
-
-              if [[ "$line" =~ [[:space:]]+$ ]]; then
-                echo "WARNING: trailing whitespace -> $file"
+            # Header checks (single loop)
+            for header in "Title" "Version" "Last updated"; do
+              count=$(grep -c "^! ${header}:" "$file" 2>/dev/null || true)
+              if [ "$count" -ne 1 ]; then
+                echo "WARNING: missing or multiple ${header} header -> $file"
+                WARNINGS=$((WARNINGS+1))
               fi
+            done
 
-              if [[ "$line" =~ denyallow ]]; then
-                echo "WARNING: denyallow directive -> $file"
-              fi
-
-              if [[ "$line" =~ ^\|\|\* ]]; then
-                echo "WARNING: overly broad wildcard -> $file"
-              fi
-            done < "$file"
-
-            # Duplicate rules heuristic
+            # Duplicate rules heuristic (single pipeline)
             if awk '!/^!/ && NF {gsub(/[[:space:]]+$/,""); print}' "$file" | sort | uniq -d | grep -q .; then
               echo "WARNING: duplicate rules detected -> $file"
+              WARNINGS=$((WARNINGS+1))
             fi
 
-            # Format-specific basic sanity
+            # Extract format
             FORMAT_LINE=$(grep -m1 '^! Compatible:' "$file" || true)
             FORMAT=$(printf '%s' "$FORMAT_LINE" | sed -E 's/^! Compatible:[[:space:]]*//; s/[[:space:]]*$//' || true)
             FORMAT_LC=$(printf '%s' "$FORMAT" | tr '[:upper:]' '[:lower:]')
 
-            if [[ -n "$FORMAT_LC" ]]; then
-              case "$FORMAT_LC" in
-                abp*|ublock*|brave*|adguard*)
-                  # scan non-comment lines
-                  while IFS= read -r line || [ -n "$line" ]; do
-                    [[ -z "$line" || "$line" =~ ^! ]] && continue
+            # If known adblock format, run a single awk pass for per-line checks
+            case "$FORMAT_LC" in
+              abp*|ublock*|brave*|adguard*|adblock\ plus*)
+                # AWK does per-line scanning and emits appropriate messages to stdout.
+                # It returns 0 always; we only count warnings (non-fatal).
+                LC_ALL=C awk -v F="$file" '
+                  function is_cntrl_bad(s) {
+                    for(i=1;i<=length(s);i++){
+                      c=substr(s,i,1)
+                      # treat tab(9), LF(10), CR(13) as allowed; detect other control chars (<space)
+                      if (c < " " && c != "\t" && c != "\n" && c != "\r") return 1
+                    }
+                    return 0
+                  }
+                  {
+                    line=$0
+                    # skip comments and blank
+                    if (line ~ /^!/ || line ~ /^[[:space:]]*$/) next
 
-                    # control/non-printable chars (exclude TAB and LF)
-                    if printf '%s' "$line" | LC_ALL=C grep -Pq '[\x00-\x08\x0B\x0C\x0E-\x1F]' 2>/dev/null; then
-                      echo "WARNING: control/non-printable characters in $file -> $line"
-                    fi
+                    # trailing whitespace
+                    if (line ~ /[[:space:]]+$/) {
+                      print "WARNING: trailing whitespace -> " F " -> " line
+                      w++
+                    }
 
-                    # regex-delimited rules: must contain a non-escaped closing slash
-                    if [[ "$line" =~ ^/ ]]; then
-                      # remove escaped '\/' then count slashes; need at least two slashes to delimit /.../
-                      if ! printf '%s' "$line" | sed 's/\\\//__ESC__/g' | awk -F'/' 'NF>=3 {exit 0} {exit 1}'; then
-                        echo "WARNING: possible unterminated regex delimiter in $file -> $line"
-                      fi
-                    fi
+                    if (line ~ /denyallow/) {
+                      print "WARNING: denyallow directive -> " F " -> " line
+                      w++
+                    }
 
-                    # domain rules starting with || should have an alnum or xn-- start next
-                    if [[ "$line" =~ ^\|\|([^/:\^*]+) ]]; then
-                      dom="${BASH_REMATCH[1]}"
-                      if [[ -z "$dom" || ! "$dom" =~ ^([A-Za-z0-9]|xn--|[[:alnum:]\-\.]) ]]; then
-                        echo "WARNING: suspicious domain token after '||' in $file -> $line"
-                      fi
-                    elif [[ "$line" =~ ^\|\| ]]; then
-                      echo "WARNING: malformed '||' rule -> $file -> $line"
-                    fi
+                    if (line ~ /^\|\|\*/) {
+                      print "WARNING: overly broad wildcard -> " F " -> " line
+                      w++
+                    }
 
-                    # explicit overly-generic wildcard '||*'
-                    if [[ "$line" =~ ^\|\|\*$ ]]; then
-                      echo "WARNING: overly broad wildcard '||*' exactly -> $file -> $line"
-                    fi
+                    # control / non-printable chars
+                    if (is_cntrl_bad(line)) {
+                      print "WARNING: control/non-printable characters in " F " -> " line
+                      w++
+                    }
 
-                    # engine-specific directives that are risky
-                    if printf '%s' "$line" | grep -qE '##\+js|##\+css|##\+abort' 2>/dev/null; then
-                      echo "WARNING: engine-specific directive (##+js/##+css/##+abort) -> $file -> $line"
-                    fi
+                    # regex-delimited rules must have a closing non-escaped slash
+                    if (line ~ /^\//) {
+                      # replace escaped \/ temporarily (POSIX sed used from awk via system can be avoided; use index counting)
+                      # Count unescaped slashes: iterate chars
+                      cnt=0; esc=0
+                      for(i=1;i<=length(line);i++){
+                        c=substr(line,i,1)
+                        if (c == "\\") { esc = !esc; continue }
+                        if (c == "/" && !esc) cnt++
+                        esc=0
+                      }
+                      if (cnt < 2) {
+                        print "WARNING: possible unterminated regex delimiter in " F " -> " line
+                        w++
+                      }
+                    }
 
-                    # exception rules starting with @@ should have content after @@
-                    if [[ "$line" =~ ^@@ ]]; then
-                      if ! printf '%s' "$line" | grep -qE '^@@[^[:space:]]' 2>/dev/null; then
-                        echo "WARNING: malformed exception rule -> $file -> $line"
-                      fi
-                    fi
+                    # domain rules starting with || capture token
+                    if (match(line,/^\|\|([^\/:\^*]+)/,m)) {
+                      dom=m[1]
+                      # simple heuristic: must start with alnum or xn--
+                      if (dom !~ /^([A-Za-z0-9]|xn--)/) {
+                        print "WARNING: suspicious domain token after || in " F " -> " line
+                        w++
+                      }
+                    } else if (line ~ /^\|\|/) {
+                      print "WARNING: malformed '||' rule -> " F " -> " line
+                      w++
+                    }
 
-                  done < "$file"
-                  ;;
-                *)
+                    if (line ~ /^\|\|\*$/) {
+                      print "WARNING: overly broad wildcard ''||*'' exactly -> " F " -> " line
+                      w++
+                    }
+
+                    # engine-specific directives
+                    if (line ~ /##\+js|##\+css|##\+abort/) {
+                      print "WARNING: engine-specific directive (##+js/##+css/##+abort) -> " F " -> " line
+                      w++
+                    }
+
+                    # exception rules starting with @@ should have non-space after
+                    if (line ~ /^@@/) {
+                      if (line !~ /^@@[^[:space:]]/) {
+                        print "WARNING: malformed exception rule -> " F " -> " line
+                        w++
+                      }
+                    }
+                  }
+                  END { exit 0 }' "$file" | while IFS= read -r msg; do
+                    echo "$msg"
+                    WARNINGS=$((WARNINGS+1))
+                  done
+                ;;
+              *)
+                if [ -n "$FORMAT_LC" ]; then
                   echo "WARNING: unknown format '$FORMAT' -> $file"
-                  ;;
-              esac
-            fi
+                  WARNINGS=$((WARNINGS+1))
+                fi
+                ;;
+            esac
 
-          done < <(find Lists -type f -name "*.txt" -print0)
+          done
 
           if [ "$ERRORS" -gt 0 ]; then
             echo "Validation failed with $ERRORS critical error(s)."
             exit 1
           fi
 
-          echo "Validation completed (warnings may exist)."
+          echo "Validation completed (warnings: $WARNINGS)."
