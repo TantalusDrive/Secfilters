@@ -16,14 +16,14 @@
 
 ! --- IDN / Punycode homograph attacks ---
 ! Punycode domains (document-level)
-/^https?:\/\/([a-z0-9-]{1,63}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/i$document,frame,popup
+/^https?:\/\/([a-z0-9-]{1,63}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/i$document,subdocument,popup
 
 ! Punycode in subdomain chains (phishing kits pattern)
-/^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/i$document,frame
+/^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/i$document,subdocument
 
 ! IDN mixed ASCII + Unicode (true homograph signal)
-/^(https?:\/\/)[^\/?#]*[A-Za-z][^\/?#]*[^\x00-\x7F][^\/?#]*(?:[\/?#]|$)/i$document,frame,popup
-/^(https?:\/\/)[^\/?#]*[^\x00-\x7F][^\/?#]*[A-Za-z][^\/?#]*(?:[\/?#]|$)/i$document,frame,popup
+/^(https?:\/\/)[^\/?#]*[A-Za-z][^\/?#]*[^\x00-\x7F][^\/?#]*(?:[\/?#]|$)/i$document,subdocument,popup
+/^(https?:\/\/)[^\/?#]*[^\x00-\x7F][^\/?#]*[A-Za-z][^\/?#]*(?:[\/?#]|$)/i$document,subdocument,popup
 
 ! Block favicon image loads on Punycode domains
 /^https?:\/\/([a-z0-9-]+\.)?xn--[a-z0-9-]+\.[a-z]{2,63}\/.*\.(?:ico|png|svg|jpg|jpeg)(?:[?#]|$)/i$image
@@ -111,10 +111,6 @@
 
 ! Block rare use of CSS background-image on <link> elements to inject or mask favicons
 ##:matches-css(img, background-image, /favicon|apple-touch-icon|mask-icon/i)
-! fallback / broader selectors for better cross-engine coverage
-##link[rel*="icon"]
-##link[rel*="shortcut icon"]
-##img[style*="favicon"],##img[style*="apple-touch-icon"],##img[style*="mask-icon"],##img[style*="mask-icon-inline"]
 
 ! Exceptions - critical logins / breakage-prone
 @@||a.trellocdn.com^$image,third-party
@@ -144,3 +140,11 @@
 @@||akamaihd.net^$image,third-party
 @@||static.xx.fbcdn.net^$image,third-party
 @@||scontent.xx.fbcdn.net^$image,third-party
+
+! fallback DOM for better cross-engine coverage
+##link[rel~="icon"][href^="http"]
+##link[rel~="shortcut"][href^="http"]
+##link[rel~="apple-touch-icon"][href^="http"]
+##img[style*="background-image"][style*="favicon"]
+##img[style*="background-image"][style*="apple-touch-icon"]
+##img[style*="background-image"][style*="mask-icon"]
