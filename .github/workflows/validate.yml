@@ -44,7 +44,7 @@ jobs:
 
             if LC_ALL=C awk '{
                 for(i=1;i<=length($0);i++){
-                  if(substr($0,i,1)==sprintf("%c",0)){found=1; exit}
+                  if(substr($0,i,1)==0){found=1; exit}
                 }
               } END {exit !found}' "$file"; then
               echo "ERROR: NULL byte found -> $file"
@@ -67,18 +67,17 @@ jobs:
             done
 
             # Duplicate rules heuristic
-            if awk '!/^!/ && NF {gsub(/[[:space:]]+$/,""); print}' "$file" | sort | uniq -d | grep -q .; then
+            if awk '!/^!/ && NF {gsub(/[[:space:]]+$/,""); print}' "$file" | sort | uniq -c | awk '$1>1{exit 1}'; then
               echo "WARNING: duplicate rules detected -> $file"
               WARNINGS=$((WARNINGS+1))
             fi
 
             # Extract format
             FORMAT=$(grep -m1 '^! Compatible:' "$file" | sed -E 's/^! Compatible:[[:space:]]*//; s/[[:space:]]*$//' || true)
-            FORMAT_LC=$(printf '%s' "$FORMAT" | tr '[:upper:]' '[:lower:]')
+            FORMAT_LC=$(printf '%s' "$FORMAT" | tr '[:upper:]' '[:lower:]' | tr -s '[:space:]')
 
             case "$FORMAT_LC" in
               abp*|ublock*|brave*|adguard*|adblock\ plus*)
-                # Per-line checks
                 while IFS= read -r line; do
                   [[ "$line" =~ ^! ]] && continue
                   [[ -z "$line" ]] && continue
@@ -86,10 +85,10 @@ jobs:
                   # trailing whitespace
                   [[ "$line" =~ [[:space:]]$ ]] && { echo "WARNING: trailing whitespace -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
-                  # denyallow directive
+                  # denyallow
                   [[ "$line" =~ denyallow ]] && { echo "WARNING: denyallow directive -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
-                  # overly broad wildcard '||*'
+                  # overly broad wildcard
                   [[ "$line" == "||*" ]] && { echo "WARNING: overly broad wildcard '||*' -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
                   # regex delimiter check
@@ -97,8 +96,8 @@ jobs:
                     cnt=0; esc=0
                     for ((i=0;i<${#line};i++)); do
                       c=${line:i:1}
-                      if [[ "$c" == '\' ]]; then esc=$((1-esc)); continue; fi
-                      if [[ "$c" == '/' && $esc -eq 0 ]]; then cnt=$((cnt+1)); fi
+                      if [[ "$c" == "\\" ]]; then esc=$((1-esc)); continue; fi
+                      if [[ "$c" == "/" && $esc -eq 0 ]]; then cnt=$((cnt+1)); fi
                       esc=0
                     done
                     ((cnt<2)) && { echo "WARNING: possible unterminated regex delimiter -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
@@ -109,12 +108,11 @@ jobs:
                     dom="${BASH_REMATCH[1]}"
                     [[ ! "$dom" =~ ^([A-Za-z0-9]|xn--) ]] && { echo "WARNING: suspicious domain token -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
                   elif [[ "$line" =~ ^\|\| ]]; then
-                    echo "WARNING: malformed '||' rule -> $file -> $line"
-                    WARNINGS=$((WARNINGS+1))
+                    echo "WARNING: malformed '||' rule -> $file -> $line"; WARNINGS=$((WARNINGS+1))
                   fi
 
                   # engine-specific directives
-                  [[ "$line" =~ ##\+js|##\+css|##\+abort ]] && { echo "WARNING: engine-specific directive -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
+                  [[ "$line" =~ ##\+js(\([a-zA-Z0-9_-]+\))?|##\+css|##\+abort ]] && { echo "WARNING: engine-specific directive -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
                   # exception rules
                   [[ "$line" =~ ^@@ ]] && [[ ! "$line" =~ ^@@[^[:space:]] ]] && { echo "WARNING: malformed exception -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
@@ -125,7 +123,6 @@ jobs:
                 [[ -n "$FORMAT_LC" ]] && { echo "WARNING: unknown format '$FORMAT' -> $file"; WARNINGS=$((WARNINGS+1)); }
                 ;;
             esac
-
           done
 
           if ((ERRORS>0)); then
