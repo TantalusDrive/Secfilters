@@ -16,13 +16,13 @@
 
 ! --- IDN / Punycode homograph attacks ---
 ! Punycode domains (document-level)
-/^https?:\/\/([a-z0-9-]{1,63}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,frame,popup
+/^https?:\/\/([a-z0-9-]{1,63}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,subdocument,popup
 
 ! Punycode in subdomain chains (phishing kits pattern)
-/^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,frame
+/^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,subdocument
 
 ! IDN mixed ASCII + Unicode (true homograph signal)
-/^(https?:\/\/)(?=[^\/?#]*[A-Za-z])(?=[^\/?#]*[^\x00-\x7F])[^\/?#]*(?:[\/?#]|$)/$document,frame,popup
+/^(https?:\/\/)(?=[^\/?#]*[A-Za-z])(?=[^\/?#]*[^\x00-\x7F])[^\/?#]*(?:[\/?#]|$)/$document,subdocument,popup
 
 ! Block favicon image loads on Punycode domains
 /^https?:\/\/([a-z0-9-]+\.)?xn--[a-z0-9-]+\.[a-z]{2,63}\/.*\.(?:ico|png|svg|jpg|jpeg)$/i$image
