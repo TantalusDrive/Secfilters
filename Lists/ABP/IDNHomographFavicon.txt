@@ -103,12 +103,6 @@
 */apple-touch-icon$image,third-party
 */mask-icon$image,third-party
 
-! Prevent setting cross-origin absolute URLs on <link rel="icon">
-##+js(aopr, HTMLLinkElement.prototype.href, /^https?:\/\//)
-
-! Prevent dynamic assignment of rel values matching icon semantics
-##+js(aopr, HTMLLinkElement.prototype.rel, /(icon|shortcut icon)/i)
-
 ! Block CSS background-image abuse for favicon injection on <img>
 ##:matches-css(img, background-image, /favicon|apple-touch-icon|mask-icon/i)
 
@@ -140,3 +134,11 @@
 @@||akamaihd.net^$image,third-party
 @@||static.xx.fbcdn.net^$image,third-party
 @@||scontent.xx.fbcdn.net^$image,third-party
+
+! fallback DOM for better cross-engine coverage
+##link[rel~="icon"][href^="http"]
+##link[rel~="shortcut"][href^="http"]
+##link[rel~="apple-touch-icon"][href^="http"]
+##img[style*="background-image"][style*="favicon"]
+##img[style*="background-image"][style*="apple-touch-icon"]
+##img[style*="background-image"][style*="mask-icon"]
