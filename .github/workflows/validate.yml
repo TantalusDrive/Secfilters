@@ -26,7 +26,7 @@ jobs:
           ERRORS=0
           WARNINGS=0
 
-          # Build file list safely
+          # Build file list safely (handles spaces/newlines in filenames)
           mapfile -d '' files < <(find Lists -type f -name "*.txt" -print0)
 
           for file in "${files[@]}"; do
@@ -37,16 +37,19 @@ jobs:
               echo "ERROR: BOM detected -> $file"
               ERRORS=$((ERRORS+1))
             fi
+
             if LC_ALL=C grep -q $'\r' "$file"; then
               echo "ERROR: CRLF line endings detected -> $file"
               ERRORS=$((ERRORS+1))
             fi
 
+            # NULL byte check (portable)
             if LC_ALL=C awk '{
                 for(i=1;i<=length($0);i++){
-                  if(substr($0,i,1)==0){found=1; exit}
+                  if (substr($0,i,1) == sprintf("%c",0)) { found=1; exit }
                 }
-              } END {exit !found}' "$file"; then
+              }
+              END { exit !found }' "$file"; then
               echo "ERROR: NULL byte found -> $file"
               ERRORS=$((ERRORS+1))
             fi
@@ -57,7 +60,7 @@ jobs:
               continue
             fi
 
-            # Header checks
+            # Header checks (Title, Version, Last updated must appear exactly once)
             for header in "Title" "Version" "Last updated"; do
               count=$(grep -c "^! ${header}:" "$file" || true)
               if [ "$count" -ne 1 ]; then
@@ -66,67 +69,128 @@ jobs:
               fi
             done
 
-            # Duplicate rules heuristic
+            # Duplicate rules heuristic (ignores comments)
             if awk '!/^!/ && NF {gsub(/[[:space:]]+$/,""); print}' "$file" | sort | uniq -c | awk '$1>1{exit 1}'; then
               echo "WARNING: duplicate rules detected -> $file"
               WARNINGS=$((WARNINGS+1))
             fi
 
-            # Extract format
+            # Extract format (normalize whitespace)
             FORMAT=$(grep -m1 '^! Compatible:' "$file" | sed -E 's/^! Compatible:[[:space:]]*//; s/[[:space:]]*$//' || true)
             FORMAT_LC=$(printf '%s' "$FORMAT" | tr '[:upper:]' '[:lower:]' | tr -s '[:space:]')
 
             case "$FORMAT_LC" in
               abp*|ublock*|brave*|adguard*|adblock\ plus*)
-                while IFS= read -r line; do
-                  [[ "$line" =~ ^! ]] && continue
-                  [[ -z "$line" ]] && continue
+                # Per-line checks. Use read loop robust to last-line-without-newline.
+                while IFS= read -r line || [ -n "${line-}" ]; do
+                  # Skip comments and blank lines
+                  case "$line" in
+                    '' | '!'* ) continue ;;
+                  esac
 
                   # trailing whitespace
-                  [[ "$line" =~ [[:space:]]$ ]] && { echo "WARNING: trailing whitespace -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
+                  if printf '%s' "$line" | LC_ALL=C grep -q '[[:space:]]$'; then
+                    echo "WARNING: trailing whitespace -> $file -> $line"
+                    WARNINGS=$((WARNINGS+1))
+                  fi
 
-                  # denyallow
-                  [[ "$line" =~ denyallow ]] && { echo "WARNING: denyallow directive -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
+                  # denyallow directive substring
+                  case "$line" in
+                    *denyallow* )
+                      echo "WARNING: denyallow directive -> $file -> $line"
+                      WARNINGS=$((WARNINGS+1))
+                      ;;
+                  esac
 
-                  # overly broad wildcard
-                  [[ "$line" == "||*" ]] && { echo "WARNING: overly broad wildcard '||*' -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
+                  # overly broad wildcard '||*' (exact match or leading/trailing whitespace trimmed)
+                  if [ "$line" = "||*" ]; then
+                    echo "WARNING: overly broad wildcard '||*' -> $file -> $line"
+                    WARNINGS=$((WARNINGS+1))
+                  fi
 
-                  # regex delimiter check
-                  if [[ "$line" =~ ^/ ]]; then
-                    cnt=0; esc=0
+                  # regex delimiter check (line starts with '/')
+                  if [[ ${line:0:1} == '/' ]]; then
+                    cnt=0
+                    esc=0
+                    # iterate bytes; safe for usual filter lines
                     for ((i=0;i<${#line};i++)); do
                       c=${line:i:1}
-                      if [[ "$c" == "\\" ]]; then esc=$((1-esc)); continue; fi
-                      if [[ "$c" == "/" && $esc -eq 0 ]]; then cnt=$((cnt+1)); fi
+                      if [[ $c == '\' ]]; then
+                        esc=$((1-esc))
+                        continue
+                      fi
+                      if [[ $c == '/' && $esc -eq 0 ]]; then
+                        cnt=$((cnt+1))
+                      fi
                       esc=0
                     done
-                    ((cnt<2)) && { echo "WARNING: possible unterminated regex delimiter -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
+                    if (( cnt < 2 )); then
+                      echo "WARNING: possible unterminated regex delimiter -> $file -> $line"
+                      WARNINGS=$((WARNINGS+1))
+                    fi
                   fi
 
-                  # domain heuristic
-                  if [[ "$line" =~ ^\|\|([^/:^*]+) ]]; then
-                    dom="${BASH_REMATCH[1]}"
-                    [[ ! "$dom" =~ ^([A-Za-z0-9]|xn--) ]] && { echo "WARNING: suspicious domain token -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
-                  elif [[ "$line" =~ ^\|\| ]]; then
-                    echo "WARNING: malformed '||' rule -> $file -> $line"; WARNINGS=$((WARNINGS+1))
+                  # domain heuristic for '||' rules using parameter expansion (avoid regex pitfalls)
+                  case "$line" in
+                    '||'* )
+                      # strip leading '||'
+                      rest=${line#'||'}
+                      # token is up to first of '/' ':' '^' '*' (or whole string)
+                      token=${rest%%[/:^*]*}
+                      # token may be empty
+                      if [ -z "$token" ]; then
+                        echo "WARNING: malformed '||' rule -> $file -> $line"
+                        WARNINGS=$((WARNINGS+1))
+                      else
+                        # allow tokens starting with alnum or xn--
+                        if ! printf '%s' "$token" | LC_ALL=C grep -qE '^(xn--|[A-Za-z0-9])'; then
+                          echo "WARNING: suspicious domain token after '||' -> $file -> $line"
+                          WARNINGS=$((WARNINGS+1))
+                        fi
+                      fi
+                      ;;
+                  esac
+
+                  # engine-specific directives detection (substr search + case)
+                  case "$line" in
+                    *'##+js('* | *'##+js'* | *'##+css'* | *'##+abort'* )
+                      echo "WARNING: engine-specific directive (##+js/##+css/##+abort) -> $file -> $line"
+                      WARNINGS=$((WARNINGS+1))
+                      ;;
+                  esac
+
+                  # exception rules sanity: must start with '@@' followed by a non-space char
+                  if [[ ${line:0:2} == "@@" ]]; then
+                    # if length < 3 or third char is whitespace -> malformed
+                    if [ "${#line}" -lt 3 ]; then
+                      echo "WARNING: malformed exception (too short) -> $file -> $line"
+                      WARNINGS=$((WARNINGS+1))
+                    else
+                      third="${line:2:1}"
+                      case "$third" in
+                        ' ' | $'\t' )
+                          echo "WARNING: malformed exception (whitespace after @@) -> $file -> $line"
+                          WARNINGS=$((WARNINGS+1))
+                          ;;
+                      esac
+                    fi
                   fi
-
-                  # engine-specific directives
-                  [[ "$line" =~ ##\+js(\([a-zA-Z0-9_-]+\))?|##\+css|##\+abort ]] && { echo "WARNING: engine-specific directive -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
-
-                  # exception rules
-                  [[ "$line" =~ ^@@ ]] && [[ ! "$line" =~ ^@@[^[:space:]] ]] && { echo "WARNING: malformed exception -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
                 done < "$file"
                 ;;
               *)
-                [[ -n "$FORMAT_LC" ]] && { echo "WARNING: unknown format '$FORMAT' -> $file"; WARNINGS=$((WARNINGS+1)); }
+                if [ -n "$FORMAT_LC" ]; then
+                  echo "WARNING: unknown format '$FORMAT' -> $file"
+                  WARNINGS=$((WARNINGS+1))
+                fi
                 ;;
             esac
+
           done
 
-          if ((ERRORS>0)); then
+          if (( ERRORS > 0 )); then
             echo "Validation failed with $ERRORS critical error(s)."
             exit 1
           fi
+
           echo "Validation completed (warnings: $WARNINGS)."
