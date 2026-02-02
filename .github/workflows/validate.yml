@@ -17,74 +17,140 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.2
-        with:
-          fetch-depth: 0  # necessario per leggere tag
+        uses: actions/checkout@v6
 
-      - name: Smart validation + metadata chores
+      - name: Validate filter lists (check-only)
         shell: bash
         run: |
-          echo "Starting smart validation and metadata update..."
+          set -euo pipefail
           ERRORS=0
-          DATE=$(date -I)
-          REPO_VERSION=$(git describe --tags --abbrev=0 || echo "v0.0.1")
-
-          # Aggiorna versione repo
-          jq --arg version "$REPO_VERSION" '.repo.version = $version' metadata.json > metadata.tmp && mv metadata.tmp metadata.json
 
           while IFS= read -r -d '' file; do
-            echo "Processing $file..."
-            cp "$file" "$file.bak"
-            sed -i '1s/^\xEF\xBB\xBF//' "$file"
+            echo "Checking $file"
 
-            # Convert CRLF -> LF
-            if grep -q $'\r' "$file"; then
-              sed -i 's/\r$//' "$file"
+            # --- Critical checks (cause failure) ---
+            if LC_ALL=C grep -q $'\xEF\xBB\xBF' "$file" 2>/dev/null; then
+              echo "ERROR: BOM detected -> $file"
+              ERRORS=$((ERRORS+1))
             fi
 
-            # NULL bytes
+            if LC_ALL=C grep -q $'\r' "$file" 2>/dev/null; then
+              echo "ERROR: CRLF line endings detected -> $file"
+              ERRORS=$((ERRORS+1))
+            fi
+
             if LC_ALL=C grep -Pq '\x00' "$file" 2>/dev/null; then
-              LC_ALL=C grep -Pn '\x00' "$file" 2>/dev/null | while IFS=: read -r lineno _; do
-                echo "WARNING: NULL byte in $file at line $lineno"
-              done
+              echo "ERROR: NULL byte found -> $file"
+              ERRORS=$((ERRORS+1))
             fi
 
-            # Empty file
-            [ ! -s "$file" ] && { echo "ERROR: $file is empty"; ERRORS=$((ERRORS+1)); }
+            if [ ! -s "$file" ]; then
+              echo "ERROR: empty file -> $file"
+              ERRORS=$((ERRORS+1))
+              continue
+            fi
 
-            # Trailing whitespace, denyallow, broad wildcard checks
+            # Header checks
+            if [ "$(grep -c '^! Title:' "$file" || true)" -ne 1 ]; then
+              echo "WARNING: missing or multiple Title header -> $file"
+            fi
+
+            if [ "$(grep -c '^! Version:' "$file" || true)" -ne 1 ]; then
+              echo "WARNING: missing or multiple Version header -> $file"
+            fi
+
+            if [ "$(grep -c '^! Last updated:' "$file" || true)" -ne 1 ]; then
+              echo "WARNING: missing or multiple Last updated header -> $file"
+            fi
+
+            # Line-level generic sanity
             while IFS= read -r line || [ -n "$line" ]; do
+              # skip empty and comment lines
               [[ -z "$line" || "$line" =~ ^! ]] && continue
-              [[ "$line" =~ [[:space:]]+$ ]] && echo "WARNING: Trailing whitespace -> $line"
-              [[ "$line" =~ denyallow ]]  && echo "WARNING: denyallow -> $line"
-              [[ "$line" =~ \|\|\* ]]     && echo "WARNING: broad wildcard -> $line"
+
+              if [[ "$line" =~ [[:space:]]+$ ]]; then
+                echo "WARNING: trailing whitespace -> $file"
+              fi
+
+              if [[ "$line" =~ denyallow ]]; then
+                echo "WARNING: denyallow directive -> $file"
+              fi
+
+              if [[ "$line" =~ ^\|\|\* ]]; then
+                echo "WARNING: overly broad wildcard -> $file"
+              fi
             done < "$file"
 
-            # Duplicate lines
-            DUP_LINES=$(awk '!/^!/ && NF{print}' "$file" | sort | uniq -d)
-            [ -n "$DUP_LINES" ] && echo "WARNING: Duplicate lines in $file"
+            # Duplicate rules heuristic
+            if awk '!/^!/ && NF {gsub(/[[:space:]]+$/,""); print}' "$file" | sort | uniq -d | grep -q .; then
+              echo "WARNING: duplicate rules detected -> $file"
+            fi
 
-            # --- AUTOMAZIONI METADATA ---
-            RELPATH=$(realpath --relative-to="$GITHUB_WORKSPACE" "$file")
-            HASH=$(sha256sum "$file" | awk '{print $1}')
+            # Format-specific basic sanity
+            FORMAT_LINE=$(grep -m1 '^! Compatible:' "$file" || true)
+            FORMAT=$(printf '%s' "$FORMAT_LINE" | sed -E 's/^! Compatible:[[:space:]]*//; s/[[:space:]]*$//' || true)
+            FORMAT_LC=$(printf '%s' "$FORMAT" | tr '[:upper:]' '[:lower:]')
 
-            # Aggiorna hash e last_updated in metadata.json
-            jq --arg file "$RELPATH" --arg hash "$HASH" --arg date "$DATE" \
-              '(.lists[] | select(.url==$file)).hash = $hash | (.lists[] | select(.url==$file)).last_updated = $date' \
-              metadata.json > metadata.tmp && mv metadata.tmp metadata.json
+            if [[ -n "$FORMAT_LC" ]]; then
+              case "$FORMAT_LC" in
+                abp*|ublock*|brave*|adguard*)
+                  # scan non-comment lines
+                  while IFS= read -r line || [ -n "$line" ]; do
+                    [[ -z "$line" || "$line" =~ ^! ]] && continue
 
-            # Aggiorna header last_updated della lista
-            if grep -q '^! Last updated:' "$file"; then
-              sed -i "1s/^! Last updated:.*/! Last updated: $DATE/" "$file"
-            else
-              sed -i "1i! Last updated: $DATE" "$file"
+                    # control/non-printable chars (exclude TAB and LF)
+                    if printf '%s' "$line" | LC_ALL=C grep -Pq '[\x00-\x08\x0B\x0C\x0E-\x1F]' 2>/dev/null; then
+                      echo "WARNING: control/non-printable characters in $file -> $line"
+                    fi
+
+                    # regex-delimited rules: must contain a non-escaped closing slash
+                    if [[ "$line" =~ ^/ ]]; then
+                      # remove escaped '\/' then count slashes; need at least two slashes to delimit /.../
+                      if ! printf '%s' "$line" | sed 's/\\\//__ESC__/g' | awk -F'/' 'NF>=3 {exit 0} {exit 1}'; then
+                        echo "WARNING: possible unterminated regex delimiter in $file -> $line"
+                      fi
+                    fi
+
+                    # domain rules starting with || should have an alnum or xn-- start next
+                    if [[ "$line" =~ ^\|\|([^/:\^*]+) ]]; then
+                      dom="${BASH_REMATCH[1]}"
+                      if [[ -z "$dom" || ! "$dom" =~ ^([A-Za-z0-9]|xn--|[[:alnum:]\-\.]) ]]; then
+                        echo "WARNING: suspicious domain token after '||' in $file -> $line"
+                      fi
+                    elif [[ "$line" =~ ^\|\| ]]; then
+                      echo "WARNING: malformed '||' rule -> $file -> $line"
+                    fi
+
+                    # explicit overly-generic wildcard '||*'
+                    if [[ "$line" =~ ^\|\|\*$ ]]; then
+                      echo "WARNING: overly broad wildcard '||*' exactly -> $file -> $line"
+                    fi
+
+                    # engine-specific directives that are risky
+                    if printf '%s' "$line" | grep -qE '##\+js|##\+css|##\+abort' 2>/dev/null; then
+                      echo "WARNING: engine-specific directive (##+js/##+css/##+abort) -> $file -> $line"
+                    fi
+
+                    # exception rules starting with @@ should have content after @@
+                    if [[ "$line" =~ ^@@ ]]; then
+                      if ! printf '%s' "$line" | grep -qE '^@@[^[:space:]]' 2>/dev/null; then
+                        echo "WARNING: malformed exception rule -> $file -> $line"
+                      fi
+                    fi
+
+                  done < "$file"
+                  ;;
+                *)
+                  echo "WARNING: unknown format '$FORMAT' -> $file"
+                  ;;
+              esac
             fi
 
           done < <(find Lists -type f -name "*.txt" -print0)
 
-          if [ $ERRORS -gt 0 ]; then
-            echo "Validation completed with $ERRORS critical error(s)."
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "Validation failed with $ERRORS critical error(s)."
             exit 1
-          else
-            echo "Validation completed successfully. Warnings may exist."
           fi
+
+          echo "Validation completed (warnings may exist)."
