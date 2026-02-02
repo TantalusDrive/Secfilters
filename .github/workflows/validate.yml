@@ -26,6 +26,7 @@ jobs:
           ERRORS=0
           WARNINGS=0
 
+          # Build file list safely
           mapfile -d '' files < <(find Lists -type f -name "*.txt" -print0)
 
           for file in "${files[@]}"; do
@@ -43,8 +44,7 @@ jobs:
 
             if LC_ALL=C awk '{
                 for(i=1;i<=length($0);i++){
-                  c=substr($0,i,1);
-                  if (c == sprintf("%c",0)) {found=1; exit}
+                  if(substr($0,i,1)==sprintf("%c",0)){found=1; exit}
                 }
               } END {exit !found}' "$file"; then
               echo "ERROR: NULL byte found -> $file"
@@ -86,11 +86,11 @@ jobs:
                   # trailing whitespace
                   [[ "$line" =~ [[:space:]]$ ]] && { echo "WARNING: trailing whitespace -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
-                  # denyallow
+                  # denyallow directive
                   [[ "$line" =~ denyallow ]] && { echo "WARNING: denyallow directive -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
-                  # overly broad wildcard
-                  [[ "$line" =~ ^\|\*\* ]] && { echo "WARNING: overly broad wildcard -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
+                  # overly broad wildcard '||*'
+                  [[ "$line" == "||*" ]] && { echo "WARNING: overly broad wildcard '||*' -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
                   # regex delimiter check
                   if [[ "$line" =~ ^/ ]]; then
@@ -112,8 +112,6 @@ jobs:
                     echo "WARNING: malformed '||' rule -> $file -> $line"
                     WARNINGS=$((WARNINGS+1))
                   fi
-
-                  [[ "$line" == "||*" ]] && { echo "WARNING: overly broad wildcard '||*' -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
 
                   # engine-specific directives
                   [[ "$line" =~ ##\+js|##\+css|##\+abort ]] && { echo "WARNING: engine-specific directive -> $file -> $line"; WARNINGS=$((WARNINGS+1)); }
