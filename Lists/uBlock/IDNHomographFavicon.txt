@@ -15,32 +15,57 @@
 
 ! --- IDN / Punycode homograph attacks ---
 ! Punycode domains (document-level)
-/^https?:\/\/([a-z0-9-]{1,32}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,frame,popup
+/^https?:\/\/([a-z0-9-]{1,63}\.)?xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,frame,popup
 
 ! Punycode in subdomain chains (phishing kits pattern)
-/^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\./$document,frame
+/^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/?#]|$)/$document,frame
 
 ! IDN mixed ASCII + Unicode (true homograph signal)
 /^(https?:\/\/)(?=[^\/?#]*[A-Za-z])(?=[^\/?#]*[^\x00-\x7F])[^\/?#]*(?:[\/?#]|$)/$document,frame,popup
 
 ! Block favicon image loads on Punycode domains
-||xn--*$image,third-party
+/^https?:\/\/([a-z0-9-]+\.)?xn--[a-z0-9-]+\.[a-z]{2,63}\/.*\.(?:ico|png|svg|jpg|jpeg)$/i$image
 
 ! Exceptions: verified global domains
 @@||xn--fsq.com^
 @@||xn--wgv71a.com^
 @@||xn--fiqs8s.com^
 @@||xn--xq7j.com^
-@@||xn--mgbaam7a8h.com|xn--mgberp4a.com|xn--caf-dma.com^
-@@||xn--banco-bb.com|xn--mdo-bga.com^
-@@||xn--apple-43a.com|xn--google-qc0b.com|xn--microsoft-8q0b.com|xn--amazon-3ra.com^
-@@||xn--wikipedia-7qa.org|xn--mozilla-8qa.org^
-@@||xn--intel-43a.com|xn--coca-44d.com|xn--nike-43a.com|xn--adidas-43a.com^
-@@||xn--facebook-43a.com|xn--twitter-43a.com|xn--youtube-43a.com|xn--reddit-43a.com|xn--linkedin-43a.com^
-@@||xn--ibm-43a.com|xn--oracle-43a.com|xn--paypal-43a.com|xn--visa-43a.com|xn--mastercard-43a.com^
-@@||xn--un-43a.org|xn--eu-43a.eu|xn--who-43a.int^
-@@||xn--nasa-43a.gov|xn--cia-43a.gov|xn--fbi-43a.gov^
-@@||xn--unicef-43a.org|xn--unesco-43a.org|xn--imf-43a.int|xn--oecd-43a.org^
+@@||xn--mgbaam7a8h.com^
+@@||xn--mgberp4a.com^
+@@||xn--caf-dma.com^
+@@||xn--banco-bb.com^
+@@||xn--mdo-bga.com^
+@@||xn--apple-43a.com^
+@@||xn--google-qc0b.com^
+@@||xn--microsoft-8q0b.com^
+@@||xn--amazon-3ra.com^
+@@||xn--wikipedia-7qa.org^
+@@||xn--mozilla-8qa.org^
+@@||xn--intel-43a.com^
+@@||xn--coca-44d.com^
+@@||xn--nike-43a.com^
+@@||xn--adidas-43a.com^
+@@||xn--facebook-43a.com^
+@@||xn--twitter-43a.com^
+@@||xn--youtube-43a.com^
+@@||xn--reddit-43a.com^
+@@||xn--linkedin-43a.com^
+@@||xn--ibm-43a.com^
+@@||xn--oracle-43a.com^
+@@||xn--paypal-43a.com^
+@@||xn--visa-43a.com^
+@@||xn--mastercard-43a.com^
+@@||xn--un-43a.org^
+@@||xn--eu-43a.eu^
+@@||xn--who-43a.int^
+@@||xn--nasa-43a.gov^
+@@||xn--cia-43a.gov^
+@@||xn--fbi-43a.gov^
+@@||xn--unicef-43a.org^
+@@||xn--unesco-43a.org^
+@@||xn--imf-43a.int^
+@@||xn--oecd-43a.org^
 @@||xn--mgba3a3ejt^
 @@||xn--cckwcxetd^
 @@||xn--mgbaakc7dvf^
@@ -60,34 +85,33 @@
 @@||xn--kpry57d^
 
 ! --- Favicons persistent tracking ---
-||/favicon.ico$image,third-party
-||/favicon.png$image,third-party
-||/apple-touch-icon$image,third-party
-||/mask-icon$image,third-party
+*/favicon.ico$image,third-party
+*/favicon.png$image,third-party
+*/apple-touch-icon$image,third-party
+*/mask-icon$image,third-party
 
-! Block JS-based favicon reinsertion globally
-##+js(aopr, HTMLLinkElement.prototype.rel, /(icon|shortcut icon)/i)
-
-! Prevent cross-origin favicon via <link rel=icon>
+! Prevent setting cross-origin URLs on <link rel="icon">
 ##+js(aopr, HTMLLinkElement.prototype.href, /^https?:\/\//)
 
-! Block CSS-based favicon injection globally
-##:matches-css(background-image: /(favicon|apple-touch-icon|mask-icon)/i)
+! Prevent dynamic assignment of rel values matching icon semantics
+##+js(aopr, HTMLLinkElement.prototype.rel, /(icon|shortcut icon)/i)
+
+! Block rare use of CSS background-image on <link> elements to inject or mask favicons
+##:matches-css(link, background-image, /favicon|apple-touch-icon|mask-icon/i)
 
 ! Exceptions - critical logins / breakage-prone
 @@||a.trellocdn.com^$image,third-party
-@@||cdn.jsdelivr.net|cdnjs.cloudflare.com|unpkg.com^$image,third-party
-@@||cloudfront.net^$image,third-party
-@@||s3.amazonaws.com|storage.googleapis.com^$image,third-party
-@@||lh3.googleusercontent.com^$image,third-party
-@@||github.githubassets.com|static.figma.com|cfl.dropboxstatic.com|static2.sharepointonline.com|statics.office.com^$image,third-party
-@@||sstatic.net^$image,third-party
-@@||fonts.gstatic.com|ssl.gstatic.com^$image,third-party
+@@*$image,third-party,domain=cdn.jsdelivr.net|cdnjs.cloudflare.com|unpkg.com
+@@*$image,third-party,domain=cloudfront.net|akamaihd.net
+@@*$image,third-party,domain=s3.amazonaws.com|storage.googleapis.com
+@@*$image,third-party,domain=lh3.googleusercontent.com
+@@*$image,third-party,domain=github.githubassets.com|static.figma.com|cfl.dropboxstatic.com|static2.sharepointonline.com|statics.office.com
+@@*$image,third-party,domain=sstatic.net
+@@*$image,third-party,domain=fonts.gstatic.com|ssl.gstatic.com
 @@||www.google.com/s2/favicons^$image,third-party
-@@||secure.gravatar.com|gravatar.com^$image,third-party
+@@*$image,third-party,domain=secure.gravatar.com|gravatar.com
 @@||avatars.githubusercontent.com^$image,third-party
-@@||disqus.com|c.disquscdn.com^$image,third-party
+@@*$image,third-party,domain=disqus.com|c.disquscdn.com
 @@||slack-edge.com^$image,third-party
 @@||static.cloudflareinsights.com^$image,third-party
-@@||akamaihd.net^$image,third-party
-@@||static.xx.fbcdn.net|scontent.xx.fbcdn.net^$image,third-party
+@@*$image,third-party,domain=static.xx.fbcdn.net|scontent.xx.fbcdn.net
