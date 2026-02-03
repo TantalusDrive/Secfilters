@@ -97,7 +97,7 @@
 ! Prevent dynamic assignment of rel values matching icon semantics
 ##+js(aopr, HTMLLinkElement.prototype.rel, /(icon|shortcut icon)/i)
 
-! Block rare use of CSS background-image on <link> elements to inject or mask favicons
+! Block rare use of CSS background-image on <img> elements to inject or mask favicons
 ##:matches-css(img, background-image, /favicon|apple-touch-icon|mask-icon/i)
 
 ! Exceptions - critical logins / breakage-prone
