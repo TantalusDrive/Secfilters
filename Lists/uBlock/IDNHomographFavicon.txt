@@ -102,9 +102,6 @@
 */apple-touch-icon$image,third-party
 */mask-icon$image,third-party
 
-! Prevent setting cross-origin URLs on <link rel="icon">
-##+js(aopr, HTMLLinkElement.prototype.href, /^https?:\/\//)
-
 ! Exceptions - critical logins / breakage-prone
 @@||a.trellocdn.com^$image,third-party
 @@*$image,third-party,domain=cdn.jsdelivr.net|cdnjs.cloudflare.com|unpkg.com
