@@ -12,6 +12,21 @@ Updates will only be recorded when:
 
 ---
 
+## [v1.0.4] - 2026-02-03
+
+- Changes:
+  - Optimized IDN detection with positive lookahead for mixed-script domains (ASCII + non-ASCII), improving performance and   reducing false positives.
+
+  - Maintained deterministic punycode (xn--) rules for document, subdocument, and popup contexts.
+
+  - Removed global ##+js(aopr) for rel to prevent breakage.
+
+  - Whitelist streamlined: redundant entries consolidated (gstatic.com), essential CDNs added (azureedge.net, visualstudio.com,  boxcdn.net, twimg.com, cdninstagram.com) and also delegated ccTLD IDNs.
+
+  - Syntax optimized for every adblocker for better parsing, protection and performance.
+
+---
+
 ## [v1.0.3] - 2026-01-28
 
 ### Stable release
