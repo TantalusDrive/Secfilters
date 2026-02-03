@@ -102,9 +102,6 @@
 */apple-touch-icon$image,third-party
 */mask-icon$image,third-party
 
-! Prevent setting cross-origin URLs on <link rel="icon">
-##+js(aopr, HTMLLinkElement.prototype.href, /^https?:\/\//)
-
 ! Exceptions - critical logins / breakage-prone
 @@||a.trellocdn.com^$image,third-party
 @@||cdn.jsdelivr.net^$image,third-party
@@ -135,11 +132,3 @@
 @@||boxcdn.net^$image,third-party
 @@||twimg.com^$image,third-party
 @@||cdninstagram.com^$image,third-party
-
-! fallback DOM for better cross-engine coverage
-##link[rel~="icon"][href^="http"]
-##link[rel~="shortcut"][href^="http"]
-##link[rel~="apple-touch-icon"][href^="http"]
-##img[style*="background-image"][style*="favicon"]
-##img[style*="background-image"][style*="apple-touch-icon"]
-##img[style*="background-image"][style*="mask-icon"]
