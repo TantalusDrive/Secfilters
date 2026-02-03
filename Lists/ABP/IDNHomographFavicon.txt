@@ -23,7 +23,7 @@
 /^https?:\/\/([a-z0-9-]+\.){2,}xn--[a-z0-9-]+\.[a-z]{2,63}(?:[\/\?#]|$)/i$document,subdocument
 
 ! IDN mixed ASCII + Unicode (true homograph signal)
-/^(https?:\/\/)([^\/?#]*[A-Za-z][^\/?#]*[^\x00-\x7F]|[^\/?#]*[^\x00-\x7F][^\/?#]*[A-Za-z])[^\/?#]*(?:[\/?#]|$)/i$document,subdocument,popup
+/^(?:https?:\/\/)(?:(?:[^\/?#]*[A-Za-z][^\/?#]*[^\x00-\x7F][^\/?#]*\.(?:com|net|org))|(?:[^\/?#]*[^\x00-\x7F][^\/?#]*[A-Za-z][^\/?#]*\.(?:com|net|org)))(?:[\/?#]|$)/i$document,subdocument,popup
 
 ! Block favicon image loads on Punycode domains
 /^https?:\/\/([a-z0-9-]+\.)?xn--[a-z0-9-]+\.[a-z]{2,63}\/.*\.(?:ico|png|svg|jpg|jpeg)(?:[\?#].*)?$/i$image
