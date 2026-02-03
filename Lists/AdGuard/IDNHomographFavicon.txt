@@ -25,7 +25,7 @@
 /^(https?:\/\/)(?=[^\/?#]*[A-Za-z])(?=[^\/?#]*[^\x00-\x7F])[^\/?#]*(?:[\/?#]|$)/i$document,subdocument,popup
 
 ! Block favicon image loads on Punycode domains
-/^https?:\/\/([a-z0-9-]+\.)?xn--[a-z0-9-]+\.[a-z]{2,63}\/.*\.(?:ico|png|svg|jpg|jpeg)$/i$image
+/^https?:\/\/([a-z0-9-]+\.)?xn--[a-z0-9-]+\.[a-z]{2,63}\/.*\.(?:ico|png|svg|jpg|jpeg)(?:[?#]|$)/i$image
 
 ! Exceptions: verified global domains (brands, institutions, govs, etc.)
 @@||xn--fsq.com^
