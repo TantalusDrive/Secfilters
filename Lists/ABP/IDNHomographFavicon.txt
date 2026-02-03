@@ -28,74 +28,74 @@
 ! Block favicon image loads on Punycode domains
 /^https?:\/\/([a-z0-9-]+\.)?xn--[a-z0-9-]+\.[a-z]{2,63}\/.*\.(?:ico|png|svg|jpg|jpeg)(?:[\?#].*)?$/i$image
 
-! Exceptions: verified global domains (brands, institutions, govs, etc.)
-@@||xn--fsq.com^
-@@||xn--wgv71a.com^
-@@||xn--fiqs8s.com^
-@@||xn--xq7j.com^
-@@||xn--mgbaam7a8h.com^
-@@||xn--mgberp4a.com^
-@@||xn--caf-dma.com^
-@@||xn--banco-bb.com^
-@@||xn--mdo-bga.com^
-@@||xn--apple-43a.com^
-@@||xn--google-qc0b.com^
-@@||xn--microsoft-8q0b.com^
-@@||xn--amazon-3ra.com^
-@@||xn--wikipedia-7qa.org^
-@@||xn--mozilla-8qa.org^
-@@||xn--intel-43a.com^
-@@||xn--coca-44d.com^
-@@||xn--nike-43a.com^
-@@||xn--adidas-43a.com^
-@@||xn--facebook-43a.com^
-@@||xn--twitter-43a.com^
-@@||xn--youtube-43a.com^
-@@||xn--reddit-43a.com^
-@@||xn--linkedin-43a.com^
-@@||xn--ibm-43a.com^
-@@||xn--oracle-43a.com^
-@@||xn--paypal-43a.com^
-@@||xn--visa-43a.com^
-@@||xn--mastercard-43a.com^
-@@||xn--un-43a.org^
-@@||xn--eu-43a.eu^
-@@||xn--who-43a.int^
-@@||xn--nasa-43a.gov^
-@@||xn--cia-43a.gov^
-@@||xn--fbi-43a.gov^
-@@||xn--unicef-43a.org^
-@@||xn--unesco-43a.org^
-@@||xn--imf-43a.int^
-@@||xn--oecd-43a.org^
-! Amazon.cn TLD
-@@||xn--mgba3a3ejt^
-! Amazon Katakana TLD
-@@||xn--cckwcxetd^
-! Etisalat
-@@||xn--mgbaakc7dvf^
-! China United Network Communications
-@@||xn--8y0a063a^
-! China Mobile
-@@||xn--6frz82g^
-! CITIC Group
-@@||xn--fiq64b^
-! Russian IDN ccTLD
-@@||xn--p1ai^
-! Ukrainian IDN ccTLD
-@@||xn--j1amh^
-! Amazon – chinese
-@@||xn--jlq480n2rg^
-! Temasek – chinese
-@@||xn--b4w605ferd^
-! Shangri‑La – chinese
-@@||xn--5su34j936bgsg^
-@@||xn--fiqz9s^
+! Exceptions: verified global domains, only delegated ccTLD IDN (IANA, ICANN)
+@@||xn--lgbbat1ad8j^
+@@||xn--y9a3aq^
+@@||xn--mgbcpq6gpa1a^
+@@||xn--54b7fta0cc^
+@@||xn--90ais^
 @@||xn--90ae^
-@@||xn--mgberp4a5d4ar^
+@@||xn--fiqs8s^
+@@||xn--fiqz9s^
 @@||xn--wgbh1c^
+@@||xn--e1a4c^
+@@||xn--qxa6a^
+@@||xn--node^
+@@||xn--qxam^
 @@||xn--j6w193g^
+@@||xn--h2brj9c^
+@@||xn--mgbbh1a71e^
+@@||xn--fpcrj9c3d^
+@@||xn--gecrj9c^
+@@||xn--s9brj9c^
+@@||xn--xkc2dl3a5ee0h^
+@@||xn--45brj9c^
+@@||xn--2scrj9c^
+@@||xn--rvc1e0am3e^
+@@||xn--45br5cyl^
+@@||xn--3hcrj9c^
+@@||xn--mgbbh1a^
+@@||xn--h2breg3eve^
+@@||xn--h2brj9c8c^
+@@||xn--mgbgu82a^
+@@||xn--mgba3a4f16a^
+@@||xn--mgbtx2b^
+@@||xn--4dbrk0ce^
+@@||xn--mgbayh7gpa^
+@@||xn--80ao21a^
+@@||xn--q7ce6a^
+@@||xn--mix082f^
+@@||xn--mix891f^
+@@||xn--mgbx4cd0ab^
+@@||xn--mgbah1a3hjkrd^
+@@||xn--l1acc^
+@@||xn--mgbc0a9azcg^
+@@||xn--d1alf^
+@@||xn--mgb9awbf^
+@@||xn--mgbai9azgqp6j^
+@@||xn--ygbi2ammx^
+@@||xn--wgbl6a^
+@@||xn--p1ai^
+@@||xn--mgberp4a5d4ar^
+@@||xn--90a3ac^
+@@||xn--yfro4i67o^
+@@||xn--clchc0ea0b2g2a9gcd^
+@@||xn--3e0b707e^
+@@||xn--fzc2c9e2c^
+@@||xn--xkc2al3hye2a^
+@@||xn--mgbpl2fh^
+@@||xn--ogbpf8fl^
+@@||xn--kprw13d^
 @@||xn--kpry57d^
+@@||xn--o3cw4h^
+@@||xn--pgbs0dh^
+@@||xn--j1amh^
+@@||xn--mgbaam7a8h^
+@@||xn--mgb2ddes^
+@@||xn--fiqz9s^
+@@||xn--fiqs8s^
+@@||xn--e1a4c^
+@@||xn--qxa6a^
 
 ! Favicons tracking
 */favicon.ico$image,third-party
@@ -118,10 +118,8 @@
 @@||cfl.dropboxstatic.com^$image,third-party
 @@||static2.sharepointonline.com^$image,third-party
 @@||statics.office.com^$image,third-party
-@@||fonts.gstatic.com^$image,third-party
-@@||ssl.gstatic.com^$image,third-party
+@@||gstatic.com^$image,third-party
 @@||www.google.com/s2/favicons^$image,third-party
-@@||secure.gravatar.com^$image,third-party
 @@||gravatar.com^$image,third-party
 @@||avatars.githubusercontent.com^$image,third-party
 @@||disqus.com^$image,third-party
@@ -129,8 +127,12 @@
 @@||slack-edge.com^$image,third-party
 @@||static.cloudflareinsights.com^$image,third-party
 @@||akamaihd.net^$image,third-party
-@@||static.xx.fbcdn.net^$image,third-party
-@@||scontent.xx.fbcdn.net^$image,third-party
+@@||xx.fbcdn.net^$image,third-party
+@@||azureedge.net^$image,third-party
+@@||visualstudio.com^$image,third-party
+@@||boxcdn.net^$image,third-party
+@@||twimg.com^$image,third-party
+@@||cdninstagram.com^$image,third-party
 
 ! Block rare use of background-image on <img> elements to inject or mask favicons (best-effort)
 ##link[rel~="icon"][href^="http"]
