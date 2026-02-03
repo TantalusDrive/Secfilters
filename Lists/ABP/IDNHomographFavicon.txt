@@ -103,9 +103,6 @@
 */apple-touch-icon$image,third-party
 */mask-icon$image,third-party
 
-! Block rare use of CSS background-image on <img> elements to inject or mask favicons
-##:matches-css(img, background-image, /favicon|apple-touch-icon|mask-icon/i)
-
 ! Exceptions - critical logins / breakage-prone
 @@||a.trellocdn.com^$image,third-party
 @@||cdn.jsdelivr.net^$image,third-party
@@ -135,7 +132,7 @@
 @@||static.xx.fbcdn.net^$image,third-party
 @@||scontent.xx.fbcdn.net^$image,third-party
 
-! fallback DOM for better cross-engine coverage
+! Block rare use of background-image on <img> elements to inject or mask favicons (best-effort)
 ##link[rel~="icon"][href^="http"]
 ##link[rel~="shortcut"][href^="http"]
 ##link[rel~="apple-touch-icon"][href^="http"]
