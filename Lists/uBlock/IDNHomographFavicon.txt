@@ -11,7 +11,7 @@
 ! Repository: https://github.com/TantalusDrive/Secfilters
 ! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
 ! Notes: Includes verified exceptions for major brands/institutions to minimize false positives.
-! Inline .svg favicons and same-origin masked favicons are not blocked, these rare edge cases carry minimal risk and attempting to block them would likely cause breakage or false positives.
+! Inline SVG favicons and same-origin masked favicons are not blocked, these rare edge cases carry minimal risk and attempting to block them would likely cause breakage or false positives.
 
 
 ! --- IDN / Punycode homograph attacks ---
