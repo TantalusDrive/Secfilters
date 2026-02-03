@@ -17,9 +17,7 @@ Updates will only be recorded when:
 - Changes:
   - Optimized IDN detection with positive lookahead for mixed-script domains (ASCII + non-ASCII), improving performance and   reducing false positives.
 
-  - Maintained deterministic punycode (xn--) rules for document, subdocument, and popup contexts.
-
-  - Removed global ##+js(aopr) for rel to prevent breakage.
+  - Removed all JS and cosmetic rules based on empirical testing, to ensure deterministic behavior and eliminating DOM-related breakage.
 
   - Whitelist streamlined: redundant entries consolidated (gstatic.com), essential CDNs added (azureedge.net, visualstudio.com,  boxcdn.net, twimg.com, cdninstagram.com) and also delegated ccTLD IDNs.
 
