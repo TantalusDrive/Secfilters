@@ -1,12 +1,12 @@
 [Adblock Plus 2.0]
 ! Title: IDN Homograph & Favicon Security List - Brave version
-! Version: v1.1.3
+! Version: v1.1.4
 ! Expires: 30 days
-! Last updated: 2026-02-02
+! Last updated: 2026-02-03
 ! Description: Security-focused filter list mitigating IDN/Punycode homograph phishing and favicon-based spoofing vectors
 ! without breaking site functionality.
 ! Scope: Security filters only, not general ad/tracker blocking.
-! Compatible: Brave Shields
+! Compatible: Brave Shields, uBlock Origin
 ! Author: TantalusDrive
 ! Repository: https://github.com/TantalusDrive/Secfilters
 ! License: CC BY‑NC‑SA 4.0 (see LICENSE file)
